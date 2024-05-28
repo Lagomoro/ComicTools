@@ -1,0 +1,92 @@
+// app global css in SCSS form
+
+.m--border--dash--sm {
+  border: 1px dashed lightgrey;
+}
+
+.m--border--dash--md {
+  border: 2px dashed lightgrey;
+}
+
+.m--border--dash--lg {
+  border: 3px dashed lightgrey;
+}
+
+.m--border--solid--sm {
+  border: 1px solid lightgrey;
+}
+
+.m--border--solid--md {
+  border: 2px solid lightgrey;
+}
+
+.m--border--solid--lg {
+  border: 3px solid lightgrey;
+}
+
+.m--outline--dash--sm {
+  outline: 1px dashed lightgrey;
+  outline-offset: -1px;
+}
+
+.m--outline--dash--md {
+  outline: 2px dashed lightgrey;
+  outline-offset: -2px;
+}
+
+.m--outline--dash--lg {
+  outline: 3px dashed lightgrey;
+  outline-offset: -3px;
+}
+
+.m--border--radius--q-btn {
+  border-radius: 3px;
+}
+
+.m--border--radius--xs {
+    border-radius: 5px;
+}
+
+.m--border--radius--sm {
+    border-radius: 7.5px;
+}
+
+.m--border--radius--md {
+    border-radius: 10px;
+}
+
+.m--border--radius--lg {
+    border-radius: 15px;
+}
+
+.m--border--radius--xl {
+    border-radius: 20px;
+}
+
+.m--flex--0-0 {
+  flex: 0 0 auto !important;
+}
+
+.m--flex--1-1 {
+  flex: 1 1 auto !important;
+}
+
+.m--text--xs {
+  font-size: 9px !important;
+}
+
+.m--text--sm {
+  font-size: 12px !important;
+}
+
+.m--text--md {
+  font-size: 15px !important;
+}
+
+.m--text--lg {
+  font-size: 18px !important;
+}
+
+.m--text--xl {
+  font-size: 21px !important;
+}

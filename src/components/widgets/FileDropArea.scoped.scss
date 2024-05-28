@@ -1,0 +1,22 @@
+.m--drop-area {
+  border-radius: 10px;
+  outline-offset: -2px;
+
+  transition: outline .25s ease-out, transform .25s ease-out, box-shadow .25s ease-out;
+
+  outline: 2px dashed lightgrey;
+}
+
+.m--drop-area:hover, .m--drop-area.--dragging {
+  outline: 2px dashed dodgerblue;
+  transform: translate(0, -2px);
+  box-shadow: 0 0 4px rgba(0, 150, 180, 0.5) inset, 0 0 2px rgba(0, 150, 180, 0.5);
+}
+
+.m--absolute-center {
+  position: absolute;
+  left: -100px;
+  top: -25px;
+  width: 200px;
+  height: 50px;
+}
