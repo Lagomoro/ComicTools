@@ -73,19 +73,19 @@
                 <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
                   <div class='m--flex--1-1 flex flex-center'>
                     <q-radio dense label='微博' v-model='ratioSelect' val='weibo' @click='repaintPreviewCanvas'>
-                      <q-tooltip anchor='center left' self='center right'>0.03</q-tooltip>
+                      <q-tooltip anchor='center left' self='center right'>{{ ratioOption['weibo'] }}</q-tooltip>
                     </q-radio>
                   </div>
                   <q-separator vertical></q-separator>
                   <div class='m--flex--1-1 flex flex-center'>
                     <q-radio dense label='B 站' v-model='ratioSelect' val='bili_bili' @click='repaintPreviewCanvas'>
-                      <q-tooltip anchor='center left' self='center right'>0.02</q-tooltip>
+                      <q-tooltip anchor='center left' self='center right'>{{ ratioOption['bili_bili'] }}</q-tooltip>
                     </q-radio>
                   </div>
                   <q-separator vertical></q-separator>
                   <div class='m--flex--1-1 flex flex-center'>
                     <q-radio dense label='空间' v-model='ratioSelect' val='qq_space' @click='repaintPreviewCanvas'>
-                      <q-tooltip anchor='center left' self='center right'>0.015</q-tooltip>
+                      <q-tooltip anchor='center left' self='center right'>{{ ratioOption['qq_space'] }}</q-tooltip>
                     </q-radio>
                   </div>
                 </div>

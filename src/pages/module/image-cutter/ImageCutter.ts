@@ -4,6 +4,7 @@
 import { defineComponent, ref } from 'vue';
 // --------------------------------------------------------------------------------
 import ImageCutterUtil from 'src/scripts/module/image-cutter/util/ImageCutterUtil';
+import { ModeType, RatioType, OutputType } from 'src/scripts/module/image-cutter/interface/common';
 // ================================================================================
 
 export default defineComponent({
@@ -23,7 +24,7 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     // * Option
     // ------------------------------------------------------------------------------
-
+    const ratioOption = ref<Record<RatioType, number>>({ 'weibo': 0.028, 'bili_bili': 0.046, 'qq_space': 0.014, 'input': 0 });
     // ------------------------------------------------------------------------------
     // * Component
     // ------------------------------------------------------------------------------
@@ -41,12 +42,12 @@ export default defineComponent({
     const _ratio = ref<number>(0);
     const _output = ref<number>(1024);
     // ------------------------------------------------------------------------------
-    const ratioSelect = ref<'weibo' | 'bili_bili' | 'qq_space' | 'input'>('weibo');
+    const ratioSelect = ref<RatioType>('weibo');
     const ratioInputValue = ref<string>();
     // ------------------------------------------------------------------------------
-    const modeSelect = ref<'cut' | 'scale'>('cut');
+    const modeSelect = ref<ModeType>('cut');
     // ------------------------------------------------------------------------------
-    const outputSelect = ref<'original' | 'scale' | 'input'>('original');
+    const outputSelect = ref<OutputType>('original');
     const outputInputValue = ref<string>();
     // ------------------------------------------------------------------------------
     const cutSize = ref<number>(-1);
@@ -145,7 +146,7 @@ export default defineComponent({
       cutSize.value = -1;
       if(_originImage.value){
         ImageCutterUtil.fillImageToCanvas(previewCanvas.value, _originImage.value);
-        const ratio = { 'weibo': 0.03, 'bili_bili': 0.02, 'qq_space': 0.015, 'input': _ratio.value }[ratioSelect.value];
+        const ratio = { ...ratioOption.value, 'input': _ratio.value }[ratioSelect.value];
         const mode = modeSelect.value;
         cutSize.value = ImageCutterUtil.calcCutSize(_originImage.value, { ratio, mode });
         ImageCutterUtil.fillSplitLineToCanvas(previewCanvas.value, { ratio, mode });
@@ -158,7 +159,7 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     async function outputBaseImage(){
       if(_originImage.value){
-        const ratio = { 'weibo': 0.03, 'bili_bili': 0.02, 'qq_space': 0.015, 'input': _ratio.value }[ratioSelect.value];
+        const ratio = { ...ratioOption.value, 'input': _ratio.value }[ratioSelect.value];
         const mode = modeSelect.value;
         const output = { 'original': cutSize.value, 'scale': Math.floor(Math.max(originImageWidth.value, originImageHeight.value) / 3), 'input': _output.value }[outputSelect.value];
         const zipBlob = await ImageCutterUtil.outputSplitImageDataZip(_originImage.value, { ratio, mode, targetSize: output });
@@ -179,6 +180,7 @@ export default defineComponent({
       // ------------------------------------------------------------------------------
       // * Option
       // ------------------------------------------------------------------------------
+      ratioOption,
       // ------------------------------------------------------------------------------
       // * Component
       // ------------------------------------------------------------------------------

@@ -9,9 +9,13 @@
 // --------------------------------------------------------------------------------
 export const DEFAULT_SLICE: number = 3;
 // --------------------------------------------------------------------------------
+export type RatioType = 'weibo' | 'bili_bili' | 'qq_space' | 'input';
+export type ModeType = 'cut' | 'scale';
+export type OutputType = 'original' | 'scale' | 'input';
+// --------------------------------------------------------------------------------
 export interface SplitCalcOption {
   ratio: number;
-  mode: 'cut' | 'scale';
+  mode: ModeType;
   slice?: number;
 }
 

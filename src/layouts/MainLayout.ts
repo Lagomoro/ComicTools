@@ -34,10 +34,6 @@ export default defineComponent({
       leftDrawerOpen.value = !leftDrawerOpen.value
     }
     // ------------------------------------------------------------------------------
-    function openGithubPage() {
-      window.open('', '_blank');
-    }
-    // ------------------------------------------------------------------------------
     //# endregion
     // ------------------------------------------------------------------------------
 
@@ -55,7 +51,6 @@ export default defineComponent({
       // * Function
       // ------------------------------------------------------------------------------
       toggleLeftDrawer,
-      openGithubPage,
     }
   }
 });

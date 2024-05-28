@@ -5,7 +5,7 @@
         <q-btn flat dense round icon='menu' @click='toggleLeftDrawer'/>
         <q-item-label header>{{ routeName }}</q-item-label>
         <q-space></q-space>
-        <q-btn flat dense round icon='mdi-github' @click='openGithubPage'/>
+        <q-btn flat dense round icon='mdi-github' target='_blank' href='https://github.com/Lagomoro/ComicTools'/>
       </q-toolbar>
     </q-header>
 

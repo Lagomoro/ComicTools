@@ -177,8 +177,8 @@ export class ImageCutterUtil {
             const processSize = size / slice;
             cutSize = Math.floor(processSize - splitSize);
 
-            x = j * processSize - cutSize / 2;
-            y = i * processSize - cutSize / 2;
+            x = j * processSize + splitSize / 2;
+            y = i * processSize + splitSize / 2;
           }
 
           tempCtx.clearRect(0, 0, targetSize, targetSize);
