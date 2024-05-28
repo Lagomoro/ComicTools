@@ -35,6 +35,8 @@ export default defineComponent({
     const _originImageArrayBuffer = ref<ArrayBuffer>();
     const _originImage = ref<HTMLImageElement>();
     // ------------------------------------------------------------------------------
+    const outputLoading = ref<boolean>(false);
+    // ------------------------------------------------------------------------------
     const originImageSrc = ref<string>();
     const originImageWidth = ref<number>(0);
     const originImageHeight = ref<number>(0);
@@ -159,11 +161,13 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     async function outputBaseImage(){
       if(_originImage.value){
+        outputLoading.value = true;
         const ratio = { ...ratioOption.value, 'input': _ratio.value }[ratioSelect.value];
         const mode = modeSelect.value;
         const output = { 'original': cutSize.value, 'scale': Math.floor(Math.max(originImageWidth.value, originImageHeight.value) / 3), 'input': _output.value }[outputSelect.value];
         const zipBlob = await ImageCutterUtil.outputSplitImageDataZip(_originImage.value, { ratio, mode, targetSize: output });
         ImageCutterUtil.downloadBlob(`export-${ ratioSelect.value }-${output}px.zip`, zipBlob);
+        outputLoading.value = false;
       }
     }
     // ------------------------------------------------------------------------------
@@ -187,6 +191,8 @@ export default defineComponent({
       previewCanvas,
       // ------------------------------------------------------------------------------
       // * Parameter
+      // ------------------------------------------------------------------------------
+      outputLoading,
       // ------------------------------------------------------------------------------
       originImageSrc,
       originImageWidth,

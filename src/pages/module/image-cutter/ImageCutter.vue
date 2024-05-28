@@ -9,7 +9,11 @@
             </q-item-section>
             <q-item-section side class='q-mr-md'>
               <div class='q-gutter-x-sm'>
-                <q-btn unelevated no-caps color='primary' label='导出九宫格' @click='outputBaseImage'></q-btn>
+                <q-btn unelevated no-caps color='primary' label='导出九宫格' @click='outputBaseImage' :loading='outputLoading'>
+                  <template v-slot:loading>
+                    <q-spinner-facebook/>
+                  </template>
+                </q-btn>
               </div>
             </q-item-section>
           </q-item>
@@ -158,9 +162,21 @@
           </q-item-section>
           <q-item-section side class='q-mr-md'>
             <div class='q-gutter-x-sm'>
-              <q-btn outline no-caps color='primary' label='示例'></q-btn>
-              <q-btn outline no-caps color='primary' label='保存为 Excel'></q-btn>
-              <q-btn unelevated no-caps color='primary' label='导出长图'></q-btn>
+              <q-btn outline no-caps color='primary' label='示例'>
+                <template v-slot:loading>
+                  <q-spinner-facebook/>
+                </template>
+              </q-btn>
+              <q-btn outline no-caps color='primary' label='保存为 Excel'>
+                <template v-slot:loading>
+                  <q-spinner-facebook/>
+                </template>
+              </q-btn>
+              <q-btn unelevated no-caps color='primary' label='导出长图'>
+                <template v-slot:loading>
+                  <q-spinner-facebook/>
+                </template>
+              </q-btn>
             </div>
           </q-item-section>
         </q-item>
