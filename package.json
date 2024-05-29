@@ -2,7 +2,7 @@
   "name": "comic-tools",
   "version": "0.0.1",
   "description": "ComicTools",
-  "productName": "ComicTools",
+  "productName": "兔萌社摊主工具",
   "author": "Lagomoro",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "@mdi/font": "^7.4.47",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
+    "exceljs": "^4.4.0",
     "jszip": "^3.10.1",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",
