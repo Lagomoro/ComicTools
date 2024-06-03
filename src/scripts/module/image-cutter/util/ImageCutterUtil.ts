@@ -9,11 +9,10 @@ import {
   CONFIG_SLOT_HEADER_LIST,
   CONFIG_SLOT_LIST, ConfigSlot, ConfigSlotHeaderKey,
   DATA_HEADER_LIST, DataKey, DEFAULT_LONG_IMAGE_EXCEL,
-  LongImageExcel, DEFAULT_SLICE, CalcBaseImageOption, OutputBaseImageOption, ConfigKey, Data, FullConfig
+  LongImageExcel, DEFAULT_SLICE, CalcBaseImageOption, OutputBaseImageOption, ConfigKey, Data
 } from 'src/scripts/module/image-cutter/interface/common';
 import ObjectUtil from 'src/scripts/util/ObjectUtil';
 import HtmlUtil from 'src/scripts/util/HtmlUtil';
-import { w } from 'app/dist/spa/assets/index.1505b1d3';
 // ================================================================================
 
 // ================================================================================
