@@ -108,6 +108,22 @@ export class HtmlUtil {
     }
   };
   // ------------------------------------------------------------------------------
+  public static repeatImageToCanvas(canvas: HTMLCanvasElement, image: HTMLImageElement, x: number, y: number, width: number, height: number): void {
+    const ctx = canvas.getContext('2d');
+
+    if(ctx){
+      ctx.save();
+      for(let i = 0; i < height; i += image.height){
+        for(let j = 0; j < width; j += image.width){
+          const w = j + image.width > width ? width - j : image.width;
+          const h = i + image.height > height ? height - i : image.height;
+          ctx.drawImage(image, 0, 0, w, h, x + j, y + i, w, h);
+        }
+      }
+      ctx.restore();
+    }
+  };
+  // ------------------------------------------------------------------------------
   public static appendToCanvas(target: HTMLCanvasElement, source: HTMLCanvasElement): void {
     const width = target.width;
     const height = target.height;

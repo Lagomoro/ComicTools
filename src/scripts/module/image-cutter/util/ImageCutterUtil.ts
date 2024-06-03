@@ -531,6 +531,9 @@ export class ImageCutterUtil {
                 tempCtx.fillStyle = config.themeColor2;
                 tempCtx.fillRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2);
                 tempCtx.drawImage(image, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
+                if (dataLine.watermark && config.watermarkImage) {
+                  HtmlUtil.repeatImageToCanvas(tempCanvas, config.watermarkImage, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
+                }
                 tempCtx.restore();
                 drawY += (drawHeight + innerPadding * 2) + baseFontSize * 1.5;
               }
