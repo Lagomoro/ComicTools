@@ -151,7 +151,7 @@
                     <div class='row q-px-md'>
                       <template v-for='index in 9' :key='index'>
                         <div class='m--border--solid--sm' style='padding: 2px'>
-                          <div class='m--border--solid--sm' :style='`padding: 11.65px;background-color: ` + longImageExcel.config[`themeColor` + index]'></div>
+                          <div class='m--border--solid--sm' :style='`padding: 11.56px;background-color: ` + longImageExcel.config[`themeColor` + index]'></div>
                         </div>
                       </template>
                     </div>

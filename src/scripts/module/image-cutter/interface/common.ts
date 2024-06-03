@@ -126,7 +126,7 @@ export interface DataHeader {
 const imageDescription = '制品展示图片，需要将图片插入 Excel 并且放在这个单元格内。'
 export const DATA_HEADER_LIST: DataHeader[] = [
   { key: 'id',          optional: false, width: 10, type: 'number',  name: 'ID',     description: '数据 ID，是一个 Sheet 内唯一的数字', defaultValue: 1 },
-  { key: 'name',        optional: false, width: 15, type: 'string',  name: '名称',    description: '制品名称',                        defaultValue: '空气' },
+  { key: 'name',        optional: false, width: 30, type: 'string',  name: '名称',    description: '制品名称',                        defaultValue: '空气' },
   { key: 'image',       optional: false, width: 10, type: 'image',   name: '图片',    description: imageDescription,                defaultValue: null },
   { key: 'watermark',   optional: false, width: 15, type: 'boolean', name: '水印',    description: '是否添加水印',                     defaultValue: false },
   { key: 'category',    optional: true,  width: 15, type: 'string',  name: '品类',    description: '制品分类',                        defaultValue: '亚克力色纸' },
