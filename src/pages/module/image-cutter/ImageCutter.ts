@@ -4,7 +4,14 @@
 import { defineComponent, ref } from 'vue';
 // --------------------------------------------------------------------------------
 import ImageCutterUtil from 'src/scripts/module/image-cutter/util/ImageCutterUtil';
-import { ModeType, RatioType, OutputType } from 'src/scripts/module/image-cutter/interface/common';
+import {
+  RatioKey, ModeKey, OutputKey,
+  Ratio, Mode, Output,
+  RATIO_LIST, RATIO_RECORD, MODE_LIST, OUTPUT_LIST,
+  EXAMPLE_LONG_IMAGE_EXCEL, LongImageExcel
+} from 'src/scripts/module/image-cutter/interface/common';
+import HtmlUtil from 'src/scripts/util/HtmlUtil';
+import ExcelUtil from 'src/scripts/util/ExcelUtil';
 // ================================================================================
 
 export default defineComponent({
@@ -24,7 +31,9 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     // * Option
     // ------------------------------------------------------------------------------
-    const ratioOption = ref<Record<RatioType, number>>({ 'weibo': 0.028, 'bili_bili': 0.046, 'qq_space': 0.014, 'input': 0 });
+    const ratioList = ref<Ratio[]>(RATIO_LIST);
+    const modeList = ref<Mode[]>(MODE_LIST);
+    const outputList = ref<Output[]>(OUTPUT_LIST);
     // ------------------------------------------------------------------------------
     // * Component
     // ------------------------------------------------------------------------------
@@ -41,28 +50,34 @@ export default defineComponent({
     const originImageWidth = ref<number>(0);
     const originImageHeight = ref<number>(0);
     // ------------------------------------------------------------------------------
+    const longImageExcel = ref<LongImageExcel>();
+    // ------------------------------------------------------------------------------
     const _ratio = ref<number>(0);
     const _output = ref<number>(1024);
     // ------------------------------------------------------------------------------
-    const ratioSelect = ref<RatioType>('weibo');
+    const ratioSelect = ref<RatioKey>(RATIO_LIST[0].key);
     const ratioInputValue = ref<string>();
     // ------------------------------------------------------------------------------
-    const modeSelect = ref<ModeType>('cut');
+    const modeSelect = ref<ModeKey>(MODE_LIST[0].key);
     // ------------------------------------------------------------------------------
-    const outputSelect = ref<OutputType>('original');
+    const outputSelect = ref<OutputKey>(OUTPUT_LIST[0].key);
     const outputInputValue = ref<string>();
     // ------------------------------------------------------------------------------
-    const cutSize = ref<number>(-1);
+    const baseImageCutSize = ref<number>(-1);
     // ------------------------------------------------------------------------------
     // * Lifecycle
     // ------------------------------------------------------------------------------
-    function _refresh(){
+    function _refreshOriginImage(){
       _originImageArrayBuffer.value = undefined;
       _originImage.value = undefined;
       originImageSrc.value = undefined;
       originImageWidth.value = 0;
       originImageHeight.value = 0;
       repaintPreviewCanvas();
+    }
+
+    function _refreshLongImageExcel(){
+      longImageExcel.value = undefined;
     }
     // ------------------------------------------------------------------------------
     // * Emit
@@ -74,16 +89,25 @@ export default defineComponent({
     //# region FileDrop
     // ------------------------------------------------------------------------------
     async function onOriginImageDrop(file: File){
-      const arrayBuffer = await ImageCutterUtil.readBlob(file, 'ArrayBuffer');
+      const arrayBuffer = await HtmlUtil.readBlob(file, 'ArrayBuffer');
       if (arrayBuffer){
         _originImageArrayBuffer.value = arrayBuffer;
-        const imageSrc = ImageCutterUtil.arrayBufferToImageSrc(arrayBuffer);
+        const imageSrc = HtmlUtil.arrayBufferToImageSrc(arrayBuffer);
         originImageSrc.value = imageSrc;
-        const originImage = await ImageCutterUtil.imageSrcToImage(imageSrc);
+        const originImage = await HtmlUtil.imageSrcToImage(imageSrc);
         _originImage.value = originImage;
         originImageWidth.value = originImage.width;
         originImageHeight.value = originImage.height;
         repaintPreviewCanvas();
+      }
+    }
+
+    async function onExcelConfigDrop(file: File){
+      const arrayBuffer = await HtmlUtil.readBlob(file, 'ArrayBuffer');
+      if (arrayBuffer){
+        const workbook = await ExcelUtil.arrayBufferToExcelJSWorkbook(arrayBuffer);
+        longImageExcel.value = ImageCutterUtil.importLongImageExcel(workbook);
+        console.log(longImageExcel.value);
       }
     }
     // ------------------------------------------------------------------------------
@@ -92,7 +116,6 @@ export default defineComponent({
     //# region Model Value Update
     // ------------------------------------------------------------------------------
     function onRatioInputFocusOut () {
-      console.log(1231)
       try {
         if (ratioInputValue.value !== '' && ratioInputValue.value !== undefined && ratioInputValue.value !== null){
           const value = Math.max(0, Math.min(parseFloat(ratioInputValue.value), 0.5));
@@ -102,12 +125,12 @@ export default defineComponent({
         } else {
           _ratio.value = 0;
           ratioInputValue.value = undefined;
-          ratioSelect.value = 'weibo';
+          ratioSelect.value = RATIO_LIST[0].key;
         }
       } catch (e) {
         _ratio.value = 0;
         ratioInputValue.value = undefined;
-        ratioSelect.value = 'weibo';
+        ratioSelect.value = RATIO_LIST[0].key;
       }
       repaintPreviewCanvas();
     }
@@ -122,12 +145,12 @@ export default defineComponent({
         } else {
           _output.value = 0;
           outputInputValue.value = undefined;
-          outputSelect.value = 'original';
+          outputSelect.value = OUTPUT_LIST[0].key;
         }
       } catch (e) {
         _output.value = 0;
         outputInputValue.value = undefined;
-        outputSelect.value = 'original';
+        outputSelect.value = OUTPUT_LIST[0].key;
       }
     }
     // ------------------------------------------------------------------------------
@@ -136,7 +159,11 @@ export default defineComponent({
     //# region Button Events
     // ------------------------------------------------------------------------------
     function removeOriginImage(){
-      _refresh();
+      _refreshOriginImage();
+    }
+
+    function removeLongImageExcel(){
+      _refreshLongImageExcel();
     }
     // ------------------------------------------------------------------------------
     //# endregion
@@ -144,13 +171,13 @@ export default defineComponent({
     //# region Canvas
     // ------------------------------------------------------------------------------
     function repaintPreviewCanvas(){
-      ImageCutterUtil.clearCanvas(previewCanvas.value);
-      cutSize.value = -1;
+      HtmlUtil.clearCanvas(previewCanvas.value);
+      baseImageCutSize.value = -1;
       if(_originImage.value){
-        ImageCutterUtil.fillImageToCanvas(previewCanvas.value, _originImage.value);
-        const ratio = { ...ratioOption.value, 'input': _ratio.value }[ratioSelect.value];
+        HtmlUtil.fillImageToCanvas(previewCanvas.value, _originImage.value);
+        const ratio = { ...RATIO_RECORD, 'input': _ratio.value }[ratioSelect.value];
         const mode = modeSelect.value;
-        cutSize.value = ImageCutterUtil.calcCutSize(_originImage.value, { ratio, mode });
+        baseImageCutSize.value = ImageCutterUtil.calcBaseImageCutSize(_originImage.value, { ratio, mode });
         ImageCutterUtil.fillSplitLineToCanvas(previewCanvas.value, { ratio, mode });
       }
     }
@@ -162,13 +189,33 @@ export default defineComponent({
     async function outputBaseImage(){
       if(_originImage.value){
         outputLoading.value = true;
-        const ratio = { ...ratioOption.value, 'input': _ratio.value }[ratioSelect.value];
+        const ratio = { ...RATIO_RECORD, 'input': _ratio.value }[ratioSelect.value];
         const mode = modeSelect.value;
-        const output = { 'original': cutSize.value, 'scale': Math.floor(Math.max(originImageWidth.value, originImageHeight.value) / 3), 'input': _output.value }[outputSelect.value];
-        const zipBlob = await ImageCutterUtil.outputSplitImageDataZip(_originImage.value, { ratio, mode, targetSize: output });
-        ImageCutterUtil.downloadBlob(`export-${ ratioSelect.value }-${output}px.zip`, zipBlob);
+        const output = { 'original': baseImageCutSize.value, 'scale': Math.floor(Math.max(originImageWidth.value, originImageHeight.value) / 3), 'input': _output.value }[outputSelect.value];
+        const zipBlob = await ImageCutterUtil.outputBaseImageDataZip(_originImage.value, { ratio, mode, targetSize: output });
+        HtmlUtil.downloadBlob(`export-${ ratioSelect.value }-${output}px.zip`, zipBlob);
         outputLoading.value = false;
       }
+    }
+
+    async function outputLongImage() {
+      if(_originImage.value && longImageExcel.value){
+        outputLoading.value = true;
+        const ratio = { ...RATIO_RECORD, 'input': _ratio.value }[ratioSelect.value];
+        const mode = modeSelect.value;
+        const output = { 'original': baseImageCutSize.value, 'scale': Math.floor(Math.max(originImageWidth.value, originImageHeight.value) / 3), 'input': _output.value }[outputSelect.value];
+        const zipBlob = await ImageCutterUtil.outputLongImageDataZip(_originImage.value, { ratio, mode, targetSize: output }, longImageExcel.value);
+        HtmlUtil.downloadBlob(`export-long-${ ratioSelect.value }-${output}px.zip`, zipBlob);
+        outputLoading.value = false;
+      }
+    }
+    // ------------------------------------------------------------------------------
+    async function exportDefaultExcel () {
+      outputLoading.value = true;
+      const workbook = ImageCutterUtil.exportLongImageExcel(EXAMPLE_LONG_IMAGE_EXCEL);
+      const excelBlob = await ExcelUtil.excelJSWorkbookToBlob(workbook);
+      HtmlUtil.downloadBlob('example.xlsx', excelBlob);
+      outputLoading.value = false;
     }
     // ------------------------------------------------------------------------------
     //# endregion
@@ -184,7 +231,9 @@ export default defineComponent({
       // ------------------------------------------------------------------------------
       // * Option
       // ------------------------------------------------------------------------------
-      ratioOption,
+      ratioList,
+      modeList,
+      outputList,
       // ------------------------------------------------------------------------------
       // * Component
       // ------------------------------------------------------------------------------
@@ -198,6 +247,8 @@ export default defineComponent({
       originImageWidth,
       originImageHeight,
       // ------------------------------------------------------------------------------
+      longImageExcel,
+      // ------------------------------------------------------------------------------
       ratioSelect,
       ratioInputValue,
       // ------------------------------------------------------------------------------
@@ -206,7 +257,7 @@ export default defineComponent({
       outputSelect,
       outputInputValue,
       // ------------------------------------------------------------------------------
-      cutSize,
+      baseImageCutSize,
       // ------------------------------------------------------------------------------
       // * Emit
       // ------------------------------------------------------------------------------
@@ -214,15 +265,20 @@ export default defineComponent({
       // * Function
       // ------------------------------------------------------------------------------
       onOriginImageDrop,
+      onExcelConfigDrop,
       // ------------------------------------------------------------------------------
       onRatioInputFocusOut,
       onOutputInputFocusOut,
       // ------------------------------------------------------------------------------
       removeOriginImage,
+      removeLongImageExcel,
       // ------------------------------------------------------------------------------
       repaintPreviewCanvas,
       // ------------------------------------------------------------------------------
       outputBaseImage,
+      outputLongImage,
+      // ------------------------------------------------------------------------------
+      exportDefaultExcel,
     }
 
   },
