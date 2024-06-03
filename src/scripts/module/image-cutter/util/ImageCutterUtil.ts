@@ -529,7 +529,9 @@ export class ImageCutterUtil {
                 const drawHeight = imageHeight * (drawWidth / imageWidth);
                 tempCtx.save();
                 tempCtx.fillStyle = config.themeColor2;
-                tempCtx.fillRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2);
+                tempCtx.roundRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2, innerPadding);
+                tempCtx.fill();
+                //tempCtx.fillRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2);
                 tempCtx.drawImage(image, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
                 if (dataLine.watermark && config.watermarkImage) {
                   HtmlUtil.repeatImageToCanvas(tempCanvas, config.watermarkImage, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
