@@ -108,8 +108,23 @@ export const CONFIG_SLOT_LIST: ConfigSlot[] = [
   { key: 'watermarkImage', type: 'image',  name: '水印图片',   description: '水印的透明底图',               defaultValue: null },
 ];
 
-export type FullConfig = Record<ConfigKey, ConfigValue>;
-export type Config = Partial<FullConfig>;
+export interface FullConfig {
+  themeColor1: string;
+  themeColor2: string;
+  themeColor3: string;
+  themeColor4: string;
+  themeColor5: string;
+  themeColor6: string;
+  themeColor7: string;
+  themeColor8: string;
+  themeColor9: string;
+  themeFont1: string;
+  themeFont2: string;
+  themeFont3: string;
+  themeFont4: string;
+  watermarkImage: HTMLImageElement  | null;
+}
+export type Config = Partial<Record<ConfigKey, ConfigValue>>;
 // --------------------------------------------------------------------------------
 export type DataKey = 'id' | 'name' | 'image' | 'watermark' | 'category' | 'price' | 'size' | 'description' | 'material' | 'manufacture' | 'producer' | 'author' | 'timestamp' | 'titleBefore' | 'textBefore' | 'titleAfter' | 'textAfter';
 export type DataValue = number | string | boolean | ArrayBuffer | null;

@@ -9,7 +9,7 @@ import {
   CONFIG_SLOT_HEADER_LIST,
   CONFIG_SLOT_LIST, ConfigSlot, ConfigSlotHeaderKey,
   DATA_HEADER_LIST, DataKey, DEFAULT_LONG_IMAGE_EXCEL,
-  LongImageExcel, DEFAULT_SLICE, CalcBaseImageOption, OutputBaseImageOption, ConfigKey, Data
+  LongImageExcel, DEFAULT_SLICE, CalcBaseImageOption, OutputBaseImageOption, ConfigKey, Data, FullConfig
 } from 'src/scripts/module/image-cutter/interface/common';
 import ObjectUtil from 'src/scripts/util/ObjectUtil';
 import HtmlUtil from 'src/scripts/util/HtmlUtil';
@@ -383,7 +383,7 @@ export class ImageCutterUtil {
         canvas.height = originImage.height;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         if(ctx){
-          const config = {
+          const config: FullConfig = {
             themeColor1: data.config.themeColor1 as string || 'rgba(255, 255, 255, 1)',
             themeColor2: data.config.themeColor2 as string || 'rgba(255, 255, 255, 1)',
             themeColor3: data.config.themeColor3 as string || 'rgba(0, 0, 0, 1)',
@@ -406,144 +406,12 @@ export class ImageCutterUtil {
             const dataLine = dataSheet[i];
             const width = originImage.width;
             const padding = width / 10;
+            const baseFontSize = width / 20;
             const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            let height = 0;
-            if(tempCtx){
-              tempCtx.save();
-              let drawY = padding;
-
-              const baseFontSize = width / 20;
-
-              if (dataLine.name) {
-                const titleFontSize = baseFontSize * 1.2;
-                drawY += titleFontSize;
-                drawY += baseFontSize * 1.6;
-              }
-
-              if (dataLine.description) {
-                const descriptionFontSize = baseFontSize * 0.8;
-                const descriptionRect = HtmlUtil.measureTextMultiline(tempCanvas, dataLine.description.toString(), padding, drawY, width - padding * 2 + descriptionFontSize, `${ descriptionFontSize }px ${ config.themeFont2 }`, config.themeColor4);
-                drawY += descriptionRect.height + baseFontSize * 0.4;
-              }
-
-              const infoFontSize = baseFontSize * 0.8;
-              const infoList = [];
-              if (dataLine.size) infoList.push({ key: '规格', value: `：${ dataLine.size.toString() }` });
-              if (dataLine.material) infoList.push({ key: '材质', value: `：${ dataLine.material.toString() }` });
-              if (dataLine.manufacture) infoList.push({ key: '工艺', value: `：${ dataLine.manufacture.toString() }` });
-              if (dataLine.producer) infoList.push({ key: '制造设计', value: `：${ dataLine.producer.toString() }` });
-              if (dataLine.author) infoList.push({ key: '作者', value: `：${ dataLine.author.toString() }` });
-              if (dataLine.timestamp) infoList.push({ key: '定稿日期', value: `：${ dataLine.timestamp.toString() }` });
-              for (const info of infoList) {
-                const keyRect = HtmlUtil.measureTextFixWidth(tempCanvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-                drawY += keyRect.height + baseFontSize * 0.1;
-              }
-              drawY += baseFontSize * 0.3;
-
-              if (dataLine.image) {
-                drawY -= baseFontSize * 0.7;
-                const innerPadding = baseFontSize * 0.4;
-                const image = await HtmlUtil.arrayBufferToImage(dataLine.image as ArrayBuffer);
-                const imageWidth = image.width;
-                const imageHeight = image.height;
-                const drawWidth = width - padding * 2 - innerPadding * 2;
-                const drawHeight = imageHeight * (drawWidth / imageWidth);
-                drawY += (drawHeight + innerPadding * 2) + baseFontSize * 1.5;
-              }
-
-              drawY -= baseFontSize * 1.5;
-              if (i === dataSheet.length - 1) drawY += padding;
-              height = drawY;
-            }
             tempCanvas.width = originImage.width;
-            tempCanvas.height = height;
-            if(tempCtx){
-              tempCtx.save();
-              let drawY = padding;
-
-              const baseFontSize = width / 20;
-
-              tempCtx.save();
-              tempCtx.fillStyle = config.themeColor1;
-              tempCtx.fillRect(0, 0, width, height);
-              tempCtx.restore();
-
-              if (dataLine.name) {
-                const titleFontSize = baseFontSize * 1.2;
-                drawY += titleFontSize;
-                tempCtx.save();
-                tempCtx.fillStyle = config.themeColor9;
-                tempCtx.fillRect(padding, drawY - titleFontSize * 0.6, titleFontSize * 0.2, titleFontSize * 0.6);
-                tempCtx.restore();
-                const titleRect = HtmlUtil.drawText(tempCanvas, dataLine.name.toString(), padding + titleFontSize * 0.6, drawY, `${ titleFontSize }px ${ config.themeFont1 }`, config.themeColor3);
-                if (dataLine.category) {
-                  HtmlUtil.drawText(tempCanvas, dataLine.category.toString(), titleRect.x + titleRect.width + titleFontSize * 0.6, drawY, `${ titleFontSize * 0.6 }px ${ config.themeFont1 }`, config.themeColor3);
-                }
-                if (dataLine.price !== undefined && dataLine.price !== null) {
-                  if (dataLine.price <= 0) {
-                    const tempPriceRect = HtmlUtil.measureText(tempCanvas, '无料', 0, drawY, `${ titleFontSize }px ${ config.themeFont1 }`, config.themeColor3);
-                    HtmlUtil.drawText(tempCanvas, '无料', width - padding - tempPriceRect.width, drawY, `${ titleFontSize }px ${ config.themeFont1 }`, config.themeColor3);
-                  } else {
-                    const tempUnitRect = HtmlUtil.measureText(tempCanvas, 'CNY', 0, drawY, `${ titleFontSize * 0.6 }px ${ config.themeFont1 }`, config.themeColor3);
-                    const unitRect = HtmlUtil.drawText(tempCanvas, 'CNY', width - padding - tempUnitRect.width, drawY, `${ titleFontSize * 0.6 }px ${ config.themeFont1 }`, config.themeColor3);
-                    const priceRect = HtmlUtil.measureText(tempCanvas, dataLine.price.toString(), 0, drawY, `${ titleFontSize }px ${ config.themeFont1 }`, config.themeColor3);
-                    HtmlUtil.drawText(tempCanvas, dataLine.price.toString(), width - padding - unitRect.width - priceRect.width, drawY, `${ titleFontSize }px ${ config.themeFont1 }`, config.themeColor3);
-                  }
-                }
-                drawY += baseFontSize * 1.6;
-              }
-
-              if (dataLine.description) {
-                const descriptionFontSize = baseFontSize * 0.8;
-                const descriptionRect = HtmlUtil.drawTextMultiline(tempCanvas, dataLine.description.toString(), padding, drawY, width - padding * 2 + descriptionFontSize * 0.5, `${ descriptionFontSize }px ${ config.themeFont2 }`, config.themeColor4);
-                drawY += descriptionRect.height + baseFontSize * 0.4;
-              }
-
-              const infoFontSize = baseFontSize * 0.8;
-              const infoList = [];
-              if (dataLine.size) infoList.push({ key: '规格', value: `：${ dataLine.size.toString() }` });
-              if (dataLine.material) infoList.push({ key: '材质', value: `：${ dataLine.material.toString() }` });
-              if (dataLine.manufacture) infoList.push({ key: '工艺', value: `：${ dataLine.manufacture.toString() }` });
-              if (dataLine.producer) infoList.push({ key: '制造设计', value: `：${ dataLine.producer.toString() }` });
-              if (dataLine.author) infoList.push({ key: '作者', value: `：${ dataLine.author.toString() }` });
-              if (dataLine.timestamp) infoList.push({ key: '定稿日期', value: `：${ dataLine.timestamp.toString() }` });
-              for (const info of infoList) {
-                // HtmlUtil.drawTextFixWidth(tempCanvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-                // const valueRect = HtmlUtil.measureText(tempCanvas, info.value, 0, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-                // HtmlUtil.drawText(tempCanvas, info.value, width - padding - valueRect.width, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-                // drawY += valueRect.height;
-                const keyRect = HtmlUtil.drawTextFixWidth(tempCanvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-                HtmlUtil.drawText(tempCanvas, info.value, padding + keyRect.width, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-                drawY += keyRect.height + baseFontSize * 0.1;
-              }
-              drawY += baseFontSize * 0.3;
-
-              if (dataLine.image) {
-                drawY -= baseFontSize * 0.7;
-                const innerPadding = baseFontSize * 0.4;
-                const image = await HtmlUtil.arrayBufferToImage(dataLine.image as ArrayBuffer);
-                const imageWidth = image.width;
-                const imageHeight = image.height;
-                const drawWidth = width - padding * 2 - innerPadding * 2;
-                const drawHeight = imageHeight * (drawWidth / imageWidth);
-                tempCtx.save();
-                tempCtx.fillStyle = config.themeColor2;
-                tempCtx.roundRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2, innerPadding);
-                tempCtx.fill();
-                //tempCtx.fillRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2);
-                tempCtx.drawImage(image, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
-                if (dataLine.watermark && config.watermarkImage) {
-                  HtmlUtil.repeatImageToCanvas(tempCanvas, config.watermarkImage, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
-                }
-                tempCtx.restore();
-                drawY += (drawHeight + innerPadding * 2) + baseFontSize * 1.5;
-              }
-
-              drawY -= baseFontSize * 1.5;
-              if (i === dataSheet.length - 1) drawY += padding;
-              tempCtx.restore();
-            }
+            tempCanvas.height = 0;
+            tempCanvas.height = await this._drawLongImage(tempCanvas, config, dataLine, padding, baseFontSize, i === dataSheet.length - 1);
+            await this._drawLongImage(tempCanvas, config, dataLine, padding, baseFontSize, i === dataSheet.length - 1);
             HtmlUtil.appendToCanvas(canvas, tempCanvas);
           }
           ctx.restore();
@@ -565,6 +433,189 @@ export class ImageCutterUtil {
     }
     return await zip.generateAsync({ type: 'blob' });
   };
+  // ------------------------------------------------------------------------------
+  private static async _drawLongImage(canvas: HTMLCanvasElement, config: FullConfig, data: Data, padding: number, baseFontSize: number, last: boolean): Promise<number> {
+    const width = canvas.width;
+    const height = canvas.height;
+    const calcHeightOnly = height === 0;
+    const ctx = canvas.getContext('2d');
+    let drawY = 0;
+    if(ctx){
+      ctx.save();
+      drawY = padding;
+
+      if(!calcHeightOnly){
+        ctx.save();
+        ctx.fillStyle = config.themeColor1;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+      }
+
+      if (data.name) {
+        const titleFontSize = baseFontSize * 1.2;
+        drawY += titleFontSize;
+        if(!calcHeightOnly) {
+          ctx.save();
+          ctx.fillStyle = config.themeColor9;
+          ctx.fillRect(padding, drawY - titleFontSize * 0.6, titleFontSize * 0.2, titleFontSize * 0.6);
+          ctx.restore();
+          const titleRect = HtmlUtil.drawText(canvas, data.name.toString(), padding + titleFontSize * 0.6, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
+          if (data.category) {
+            HtmlUtil.drawText(canvas, data.category.toString(), titleRect.x + titleRect.width + titleFontSize * 0.6, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
+          }
+          if (data.price !== undefined && data.price !== null) {
+            if (data.price <= 0) {
+              const tempPriceRect = HtmlUtil.measureText(canvas, '无料', 0, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
+              HtmlUtil.drawText(canvas, '无料', width - padding - tempPriceRect.width, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
+            } else {
+              const tempUnitRect = HtmlUtil.measureText(canvas, 'CNY', 0, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
+              const unitRect = HtmlUtil.drawText(canvas, 'CNY', width - padding - tempUnitRect.width, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
+              const priceRect = HtmlUtil.measureText(canvas, data.price.toString(), 0, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
+              HtmlUtil.drawText(canvas, data.price.toString(), width - padding - unitRect.width - priceRect.width, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
+            }
+          }
+        }
+        drawY += baseFontSize * 1.6;
+      }
+
+      if(data.titleBefore){
+        drawY -= baseFontSize * 0.5;
+        const titleBeforeFontSize = baseFontSize * 0.8;
+        const innerPadding = baseFontSize * 0.8;
+        const drawWidth = width - padding * 2;
+        const drawHeight = baseFontSize * 1.8;
+        if(!calcHeightOnly) {
+          ctx.save();
+          ctx.fillStyle = config.themeColor7;
+          ctx.beginPath();
+          ctx.roundRect(padding, drawY, drawWidth, drawHeight, baseFontSize * 0.4);
+          ctx.closePath();
+          ctx.fill();
+          if(data.textBefore) {
+            ctx.fillRect(padding, drawY + drawHeight / 2, drawWidth, drawHeight / 2);
+          }
+          HtmlUtil.drawTextAlign(canvas, data.titleBefore as string, padding, drawY + baseFontSize * 1.2, drawWidth, `${ titleBeforeFontSize }px ${ config.themeFont4 }`, config.themeColor6, 'center');
+          ctx.restore();
+        }
+        if(data.textBefore) {
+          const textY = drawY + drawHeight + innerPadding + titleBeforeFontSize * 1.1;
+          const textRect = HtmlUtil.measureTextMultiline(canvas, data.textBefore as string, padding + innerPadding, textY, drawWidth - innerPadding * 2, `${ titleBeforeFontSize }px ${ config.themeFont4 }`, config.themeColor8);
+          if(!calcHeightOnly) {
+            ctx.save();
+            ctx.strokeStyle = config.themeColor7;
+            ctx.lineWidth = innerPadding / 16;
+            ctx.beginPath();
+            ctx.roundRect(padding, drawY, drawWidth, drawHeight + textRect.height + innerPadding * 2, baseFontSize * 0.4);
+            ctx.closePath();
+            ctx.stroke();
+            HtmlUtil.drawTextMultiline(canvas, data.textBefore as string, padding + innerPadding, textY, drawWidth - innerPadding * 2, `${ titleBeforeFontSize }px ${ config.themeFont4 }`, config.themeColor8);
+            ctx.restore();
+          }
+          drawY += textRect.height + innerPadding * 2 - baseFontSize * 0.2;
+        }
+        drawY += drawHeight + baseFontSize * 1.5;
+      }
+
+      if (data.description) {
+        const descriptionFontSize = baseFontSize * 0.8;
+        const descriptionRect = calcHeightOnly ?
+          HtmlUtil.measureTextMultiline(canvas, data.description.toString(), padding, drawY, width - padding * 2 + descriptionFontSize * 0.5, `${descriptionFontSize}px ${config.themeFont2}`, config.themeColor4) :
+          HtmlUtil.drawTextMultiline(canvas, data.description.toString(), padding, drawY, width - padding * 2 + descriptionFontSize * 0.5, `${descriptionFontSize}px ${config.themeFont2}`, config.themeColor4);
+        drawY += descriptionRect.height + baseFontSize * 0.4;
+      }
+
+      const infoFontSize = baseFontSize * 0.8;
+      const infoList = [];
+      if (data.size) infoList.push({ key: '规格', value: `：${ data.size.toString() }` });
+      if (data.material) infoList.push({ key: '材质', value: `：${ data.material.toString() }` });
+      if (data.manufacture) infoList.push({ key: '工艺', value: `：${ data.manufacture.toString() }` });
+      if (data.producer) infoList.push({ key: '制造设计', value: `：${ data.producer.toString() }` });
+      if (data.author) infoList.push({ key: '作者', value: `：${ data.author.toString() }` });
+      if (data.timestamp) infoList.push({ key: '定稿日期', value: `：${ data.timestamp.toString() }` });
+      for (const info of infoList) {
+        // HtmlUtil.drawTextFixWidth(canvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
+        // const valueRect = HtmlUtil.measureText(canvas, info.value, 0, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
+        // HtmlUtil.drawText(canvas, info.value, width - padding - valueRect.width, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
+        // drawY += valueRect.height;
+        const keyRect = calcHeightOnly ?
+          HtmlUtil.measureTextFixWidth(canvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5) :
+          HtmlUtil.drawTextFixWidth(canvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
+        if(!calcHeightOnly){
+          HtmlUtil.drawText(canvas, info.value, padding + keyRect.width, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
+        }
+        drawY += keyRect.height + baseFontSize * 0.1;
+      }
+      drawY += baseFontSize * 0.3;
+
+      if (data.image) {
+        drawY -= baseFontSize * 0.7;
+        const innerPadding = baseFontSize * 0.4;
+        const image = await HtmlUtil.arrayBufferToImage(data.image as ArrayBuffer);
+        const imageWidth = image.width;
+        const imageHeight = image.height;
+        const drawWidth = width - padding * 2 - innerPadding * 2;
+        const drawHeight = imageHeight * (drawWidth / imageWidth);
+        if(!calcHeightOnly) {
+          ctx.save();
+          ctx.fillStyle = config.themeColor2;
+          ctx.beginPath();
+          ctx.roundRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2, innerPadding);
+          ctx.closePath();
+          ctx.fill();
+          //ctx.fillRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2);
+          ctx.drawImage(image, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
+          if (data.watermark && config.watermarkImage) {
+            HtmlUtil.repeatImageToCanvas(canvas, config.watermarkImage, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
+          }
+          ctx.restore();
+        }
+        drawY += (drawHeight + innerPadding * 2) + baseFontSize * 1.5;
+      }
+
+      if(data.titleAfter){
+        drawY -= baseFontSize * 0.7;
+        const titleAfterFontSize = baseFontSize * 0.8;
+        const innerPadding = baseFontSize * 0.8;
+        const drawWidth = width - padding * 2;
+        const drawHeight = baseFontSize * 1.8;
+        if(!calcHeightOnly) {
+          ctx.save();
+          ctx.fillStyle = config.themeColor7;
+          ctx.beginPath();
+          ctx.roundRect(padding, drawY, drawWidth, drawHeight, baseFontSize * 0.4);
+          ctx.closePath();
+          ctx.fill();
+          if(data.textAfter) {
+            ctx.fillRect(padding, drawY + drawHeight / 2, drawWidth, drawHeight / 2);
+          }
+          HtmlUtil.drawTextAlign(canvas, data.titleAfter as string, padding, drawY + baseFontSize * 1.2, drawWidth, `${ titleAfterFontSize }px ${ config.themeFont4 }`, config.themeColor6, 'center');
+          ctx.restore();
+        }
+        if(data.textAfter) {
+          const textY = drawY + drawHeight + innerPadding + titleAfterFontSize * 1.1;
+          const textRect = HtmlUtil.measureTextMultiline(canvas, data.textAfter as string, padding + innerPadding, textY, drawWidth - innerPadding * 2, `${ titleAfterFontSize }px ${ config.themeFont4 }`, config.themeColor8);
+          if(!calcHeightOnly) {
+            ctx.save();
+            ctx.strokeStyle = config.themeColor7;
+            ctx.lineWidth = innerPadding / 16;
+            ctx.beginPath();
+            ctx.roundRect(padding, drawY, drawWidth, drawHeight + textRect.height + innerPadding * 2, baseFontSize * 0.4);
+            ctx.closePath();
+            ctx.stroke();
+            HtmlUtil.drawTextMultiline(canvas, data.textAfter as string, padding + innerPadding, textY, drawWidth - innerPadding * 2, `${ titleAfterFontSize }px ${ config.themeFont4 }`, config.themeColor8);
+            ctx.restore();
+          }
+          drawY += textRect.height + innerPadding * 2;
+        }
+        drawY += drawHeight + baseFontSize * 1.5;
+      }
+
+      drawY -= baseFontSize * 1.5;
+      if (last) drawY += padding;
+      ctx.restore();
+    }
+    return drawY;
+  }
   // ------------------------------------------------------------------------------
   //# endregion
   // ------------------------------------------------------------------------------

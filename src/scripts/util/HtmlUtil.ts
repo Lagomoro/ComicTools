@@ -167,6 +167,24 @@ export class HtmlUtil {
     return output;
   };
   // ------------------------------------------------------------------------------
+  public static drawTextAlign(canvas: HTMLCanvasElement, text: string, x: number, y: number, width: number, font?: string, fillStyle?: string | CanvasGradient | CanvasPattern, align: 'left' | 'center' | 'right' = 'left'): Rect {
+    const ctx = canvas.getContext('2d');
+    if(ctx) {
+      ctx.save();
+      if (font) ctx.font = font;
+      if (fillStyle) ctx.fillStyle = fillStyle;
+      const textMetrics = ctx.measureText(text);
+      ctx.fillText(text, (align === 'left' ? x : (align === 'center' ? x + (width - textMetrics.width) / 2 : x + (width - textMetrics.width))), y);
+      ctx.restore();
+    }
+    return this.measureTextAlign(canvas, text, x, y, width, font, fillStyle, align);
+  };
+
+  public static measureTextAlign(canvas: HTMLCanvasElement, text: string, x: number, y: number, width: number, font?: string, fillStyle?: string | CanvasGradient | CanvasPattern, align: 'left' | 'center' | 'right' = 'left'): Rect {
+    const rect = this.measureText(canvas, text, x, y, font, fillStyle);
+    return { ...rect, x: (align === 'left' ? x : (align === 'center' ? x + (width - rect.width) / 2 : x + (width - rect.width))) };
+  };
+  // ------------------------------------------------------------------------------
   public static drawTextFixWidth(canvas: HTMLCanvasElement, text: string, x: number, y: number, width: number, font?: string, fillStyle?: string | CanvasGradient | CanvasPattern): Rect {
     const ctx = canvas.getContext('2d');
     if(ctx) {
