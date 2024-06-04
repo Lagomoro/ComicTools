@@ -513,15 +513,15 @@ export class ImageCutterUtil {
           }
           drawY += textRect.height + innerPadding * 2 - baseFontSize * 0.2;
         }
-        drawY += drawHeight + baseFontSize * 1.5;
+        drawY += drawHeight + baseFontSize * 1.4;
       }
 
       if (data.description) {
         const descriptionFontSize = baseFontSize * 0.8;
         const descriptionRect = calcHeightOnly ?
-          HtmlUtil.measureTextMultiline(canvas, data.description.toString(), padding, drawY, width - padding * 2 + descriptionFontSize * 0.5, `${descriptionFontSize}px ${config.themeFont2}`, config.themeColor4) :
-          HtmlUtil.drawTextMultiline(canvas, data.description.toString(), padding, drawY, width - padding * 2 + descriptionFontSize * 0.5, `${descriptionFontSize}px ${config.themeFont2}`, config.themeColor4);
-        drawY += descriptionRect.height + baseFontSize * 0.4;
+          HtmlUtil.measureTextMultiline(canvas, data.description.toString(), padding, drawY + baseFontSize * 0.3, width - padding * 2 + descriptionFontSize * 0.5, `${descriptionFontSize}px ${config.themeFont2}`, config.themeColor4) :
+          HtmlUtil.drawTextMultiline(canvas, data.description.toString(), padding, drawY + baseFontSize * 0.3, width - padding * 2 + descriptionFontSize * 0.5, `${descriptionFontSize}px ${config.themeFont2}`, config.themeColor4);
+        drawY += descriptionRect.height + baseFontSize * 0.7;
       }
 
       const infoFontSize = baseFontSize * 0.8;
