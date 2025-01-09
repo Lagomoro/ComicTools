@@ -80,7 +80,7 @@
           </div>
         </template>
         <div class='m--flex--1-1'>
-{{errorM}}
+
         </div>
       </template>
       <template v-else>

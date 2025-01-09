@@ -46,7 +46,7 @@ export default defineComponent({
 
     interface NFCRecord {
       recordType: 'text' | 'url' | 'android.com:pkg';
-      data: string | Uint8Array;
+      data?: string | Uint8Array;
     }
     // ------------------------------------------------------------------------------
     // * Constant
@@ -106,14 +106,14 @@ export default defineComponent({
 
       try {
         const result = await _stepNfcReader();
-        if(result[0].recordType === 'url' && (result[0].data as string).startsWith('https://render.alipay.com/p/s/ulink/sn?s=dc&scheme=') &&
+        if(result.length > 1 && result[0].recordType === 'url' && (result[0].data as string).startsWith('https://render.alipay.com/p/s/ulink/sn?s=dc&scheme=') &&
           result[1].recordType === 'android.com:pkg' && result[1].data === 'com.eg.android.AlipayGphone') {
           result[1].data = new TextEncoder().encode(result[1].data);
           await _stepNfcWait();
           await _stepNfcWriter(result);
           _showStatus(Status.Success, 'mdi-check-circle-outline', '写入成功', '从碰一碰小蓝环复制 NFC Tag 成功。');
         } else {
-          _showStatus(Status.Warning, 'mdi-alert', 'NFC Tag 不符合要求', '读取的 NFC Tag 不是支付宝付款码，请重新开始流程。');
+          _showStatus(Status.Warning, 'mdi-alert', 'NFC Tag 不符合要求', '读取的 NFC Tag 不是支付宝付款码，或者读取时发生了数据缺失。读取时请不要移动手机，会导致数据流不稳，请重新开始流程。');
         }
       } catch (error) {
         console.error(error);
@@ -218,7 +218,8 @@ export default defineComponent({
           };
           ndef.onreading = (event: { message: { records: NFCRecord[] } }) => {
             _onDialogClose.value = () => void 0;
-            resolve(event.message.records.map(p => ({ recordType: p.recordType, data: new TextDecoder().decode(p.data as Uint8Array) })));
+            abortController.abort({ message: 'Cancelled' });
+            resolve(event.message.records.map(p => ({ recordType: p.recordType, data: p.data ? new TextDecoder().decode(p.data as Uint8Array): undefined })));
           };
           await ndef.scan({ signal: abortController.signal });
         } catch (error) {
@@ -301,7 +302,6 @@ export default defineComponent({
     //# endregion
     // ------------------------------------------------------------------------------
 
-    const errorM = ref<string>('');
     return {
       // ------------------------------------------------------------------------------
       // * Class
@@ -341,9 +341,7 @@ export default defineComponent({
       scanFromPayCode,
       // ------------------------------------------------------------------------------
       closeDialog,
-
-      errorM
-  }
+    }
 
   },
 });
