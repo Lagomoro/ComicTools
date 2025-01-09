@@ -13,6 +13,18 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/module/image-cutter/ImageCutter.vue'),
     meta: { icon: 'mdi-apps', description: '支持九宫格和长图导出' }
   },
+  {
+    path: '/module/alipay-nfc-tag-writer',
+    name: '支付宝碰一碰',
+    component: () => import('pages/module/alipay-nfc-tag-writer/AlipayNFCTagWriter.vue'),
+    meta: { icon: 'mdi-nfc', description: '快速生成支付宝碰一碰 NFC Tag' }
+  },
+  {
+    path: '/module/blue-archive-nfc-launch',
+    name: '蔚蓝档案，启动！',
+    component: () => import('pages/module/blue-archive-nfc-launch/BlueArchiveNFCLaunch.vue'),
+    meta: { icon: 'mdi-rocket-launch-outline', description: '制作蔚蓝档案 NFC 启动卡' }
+  },
 
   // Always leave this as last one,
   // but you can also remove it

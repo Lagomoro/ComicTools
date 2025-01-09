@@ -1,0 +1,37 @@
+.m--alipay-nfc-tag-writer--dialog > div > div {
+  min-width: calc(min(500px, 100vw - 48px));
+  max-width: calc(100vw - 48px);
+}
+
+.m--alipay-nfc-tag-writer--dialog-tab-container {
+  width: calc(min(500px, 80vw));
+
+  & > .nfc-reader {
+    height: calc(min(500px, 80vw));
+  }
+
+  & > .nfc-wait {
+    height: calc(min(500px, 80vw));
+  }
+
+  & > .nfc-writer {
+    height: calc(min(500px, 80vw));
+  }
+}
+
+.m--alipay-nfc-tag-writer--status {
+  &.negative {
+    border: 1px solid rgba(193, 0, 21, 1);
+    background-color: rgba(193, 0, 21, 0.2);
+  }
+
+  &.warning {
+    border: 1px solid rgba(242, 192, 55, 1);
+    background-color: rgba(242, 192, 55, 0.2);
+  }
+
+  &.positive {
+    border: 1px solid rgba(33, 186, 69, 1);
+    background-color: rgba(33, 186, 69, 0.2);
+  }
+}

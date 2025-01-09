@@ -2,7 +2,21 @@
 
 ### 兔萌社摊主工具，目标是让天下没有难做的摊主！
 
-## Install the dependencies
+### 功能列表
+* 一键摊宣
+```
+支持九宫格和长图导出
+```
+* 支付宝碰一碰
+```
+快速生成支付宝碰一碰 NFC Tag
+```
+* 蔚蓝档案，启动！
+```
+制作蔚蓝档案 NFC 启动卡
+```
+
+### Install the dependencies
 ```bash
 yarn
 # or
