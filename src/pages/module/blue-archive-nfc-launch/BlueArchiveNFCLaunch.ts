@@ -150,10 +150,10 @@ export default defineComponent({
           _onDialogClose.value = () => void 0;
           resolve();
         } catch (error) {
-          if(error.message === 'Cancelled'){
+          if((error as Error).message === 'Cancelled'){
             _showStatus(Status.Warning, 'mdi-cancel', '流程被手动取消', '你取消了写入 NFC 标签，请重新开始流程。');
             reject(new Error('Cancelled'));
-          } else if(error.message.startsWith('Failed to write due to an IO error')) {
+          } else if((error as Error).message.startsWith('Failed to write due to an IO error')) {
             _showStatus(Status.Error, 'mdi-pencil-remove-outline', 'NFC Tag 写入失败', '发生了 I/O 错误，写入时请不要移动手机，会导致数据流不稳定，请重新开始流程。');
             reject(error);
           } else {
