@@ -72,7 +72,68 @@ export class Color {
   // ------------------------------------------------------------------------------
   //# endregion
   // ------------------------------------------------------------------------------
+  //# region Convert
+  // ------------------------------------------------------------------------------
+  public toGreyStyleColor(): Color {
+    const grayscale = this._r * 0.299 + this._g * 0.587 + this._b * 0.114;
+    return new Color(grayscale, grayscale, grayscale, this._a);
+  };
+  // ------------------------------------------------------------------------------
+  //# endregion
+  // ------------------------------------------------------------------------------
   //# region Calc
+  // ------------------------------------------------------------------------------
+  private _clamp(value: number){
+    return Math.max(0, Math.min(value, 255));
+  }
+  // ------------------------------------------------------------------------------
+  public add(r: number, g: number, b: number, a: number = 0) {
+    this._r = this._clamp(this._r + r);
+    this._g = this._clamp(this._g + g);
+    this._b = this._clamp(this._b + b);
+    this._a = this._clamp(this._a + a);
+    return this;
+  };
+
+  public addNew(r: number, g: number, b: number, a: number = 0) {
+    return new Color(this._clamp(this._r + r), this._clamp(this._g + g), this._clamp(this._b + b), this._clamp(this._a + a));
+  };
+
+  public addColor(color: Color) {
+    this._r = this._clamp(this._r + color._r);
+    this._g = this._clamp(this._g + color._g);
+    this._b = this._clamp(this._b + color._b);
+    this._a = this._clamp(this._a + color._a);
+    return this;
+  };
+
+  public addColorNew(color: Color) {
+    return new Color(this._clamp(this._r + color._r), this._clamp(this._g + color._g), this._clamp(this._b + color._b), this._clamp(this._a + color._a));
+  };
+  // ------------------------------------------------------------------------------
+  public minus(r: number, g: number, b: number, a: number = 0) {
+    this._r = this._clamp(this._r - r);
+    this._g = this._clamp(this._g - g);
+    this._b = this._clamp(this._b - b);
+    this._a = this._clamp(this._a - a);
+    return this;
+  };
+
+  public minusNew(r: number, g: number, b: number, a: number = 0) {
+    return new Color(this._clamp(this._r - r), this._clamp(this._g - g), this._clamp(this._b - b), this._clamp(this._a - a));
+  };
+
+  public minusColor(color: Color) {
+    this._r = this._clamp(this._r - color._r);
+    this._g = this._clamp(this._g - color._g);
+    this._b = this._clamp(this._b - color._b);
+    this._a = this._clamp(this._a - color._a);
+    return this;
+  };
+
+  public minusColorNew(color: Color) {
+    return new Color(this._clamp(this._r - color._r), this._clamp(this._g - color._g), this._clamp(this._b - color._b), this._clamp(this._a - color._a));
+  };
   // ------------------------------------------------------------------------------
   public distance(r: number, g: number, b: number): number {
     return Math.sqrt(Math.pow(this._r - r, 2) + Math.pow(this._g - g, 2) + Math.pow(this._b - b, 2));
