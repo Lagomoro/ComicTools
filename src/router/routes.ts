@@ -26,6 +26,18 @@ const routes: RouteRecordRaw[] = [
     meta: { icon: 'mdi-rocket-launch-outline', description: '制作蔚蓝档案 NFC 启动卡' }
   },
   {
+    path: '/module/good-display-nfc-e-paper',
+    name: '智能价签写入',
+    component: () => import('pages/module/good-display-nfc-e-paper/GoodDisplayNFCePaper.vue'),
+    meta: { icon: 'mdi-cash-multiple', description: '更新智能 NFC 价签' }
+  },
+  {
+    path: '/module/electronic-menu',
+    name: '电子菜单',
+    component: () => import('pages/module/electronic-menu/ElectronicMenu.vue'),
+    meta: { icon: 'mdi-receipt-text-outline', description: '在漫展现场展示电子菜单' }
+  },
+  {
     path: '/module/randomizer',
     name: '随机数生成器',
     component: () => import('pages/module/randomizer/RandomizerPage.vue'),
