@@ -7,11 +7,13 @@
   height: 200px;
 
   & > .--auto {
+    text-align: center;
     position: absolute;
     visibility: hidden;
   }
 
   & > .--text {
+    text-align: center;
     font-size: 120px;
   }
 }
