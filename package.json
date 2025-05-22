@@ -15,11 +15,12 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "@quasar/extras": "^1.16.4",
-    "axios": "^1.2.1",
+    "axios": "1.8.2",
     "exceljs": "^4.4.0",
     "html5-qrcode": "^2.3.8",
     "jszip": "^3.10.1",
     "pinia": "^2.0.11",
+    "qs": "^6.14.0",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-device-detect": "^1.0.3",

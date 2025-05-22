@@ -1,0 +1,27 @@
+.m--randomizer--card {
+  width: 816px;
+}
+
+.m--randomizer--value-field {
+  max-width: 700px;
+  height: 200px;
+
+  & > .--auto {
+    padding: 0 15px;
+    left: 0;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  & > .--text {
+    font-size: 120px;
+  }
+}
+
+.m--randomizer--result-field {
+  max-width: 700px;
+}
+
+.m--randomizer--width-3 {
+  width: calc((100% - 2 * 16px) / 3);
+}

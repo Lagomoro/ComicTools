@@ -9,7 +9,7 @@ export default defineComponent({
     placeholder: { type: String,                      default: '拖拽文件到此，或点击选择文件' },
     clickHolder: { type: String,                      default: '点击选择文件' },
     dragHolder:  { type: String,                      default: '释放鼠标放置文件' },
-    filter:      { type: Array as PropType<string[]>, default: [] },
+    filter:      { type: Array as PropType<string[]>, default: () => [] },
   },
   emits: [
     'upload'
