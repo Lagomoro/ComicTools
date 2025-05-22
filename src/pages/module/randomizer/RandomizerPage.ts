@@ -99,8 +99,8 @@ export default defineComponent({
     const randomizerRandom = ref<Randomizer>(new Randomizer());
     const randomizerLottery = ref<Randomizer>(new Randomizer());
     // ------------------------------------------------------------------------------
-    watch(() => randomizerRandom.value.currentValue, () => _watchAutoFontSize(elementDivRandom.value, elementAutoRandom.value, elementTextRandom.value, 120));
-    watch(() => randomizerLottery.value.currentValue, () => _watchAutoFontSize(elementDivLottery.value, elementAutoLottery.value, elementTextLottery.value, 120));
+    watch(() => randomizerRandom.value.currentValue,  async () => await _watchAutoFontSizeAsync(elementDivRandom.value, elementAutoRandom.value, elementTextRandom.value, 120));
+    watch(() => randomizerLottery.value.currentValue,  async () => await _watchAutoFontSizeAsync(elementDivLottery.value, elementAutoLottery.value, elementTextLottery.value, 120));
     // ------------------------------------------------------------------------------
     // * Lifecycle
     // ------------------------------------------------------------------------------
@@ -119,6 +119,11 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     //# region H5 Events
     // ------------------------------------------------------------------------------
+    async function _watchAutoFontSizeAsync(div: HTMLDivElement, auto: HTMLDivElement, text: HTMLDivElement, value: number) {
+      await nextTick();
+      _watchAutoFontSize(div, auto, text, value);
+    }
+
     function _watchAutoFontSize(div: HTMLDivElement, auto: HTMLDivElement, text: HTMLDivElement, value: number) {
       if(div && auto && text && value > 0) {
         for (let i = value; i > 0; i--) {

@@ -20,7 +20,7 @@
                   </div>
 
                   <div class='flex flex-center'>
-                    <div ref='elementDivRandom' class='flex flex-center overflow-hidden m--randomizer--value-field q-mx-lg'>
+                    <div ref='elementDivRandom' class='flex flex-center overflow-hidden relative-position full-width m--randomizer--value-field q-mx-lg'>
                       <div ref='elementAutoRandom' class='--auto'>{{ randomizerRandom.currentValue.length > 0 ? randomizerRandom.currentValue.join(' ') : '-' }}</div>
                       <div ref='elementTextRandom' class='--text'>{{ randomizerRandom.currentValue.length > 0 ? randomizerRandom.currentValue.join(' ') : '-' }}</div>
                     </div>
@@ -124,7 +124,7 @@
                   </div>
 
                   <div class='flex flex-center'>
-                    <div ref='elementDivLottery' class='flex flex-center overflow-hidden m--randomizer--value-field q-mx-lg'>
+                    <div ref='elementDivLottery' class='flex flex-center overflow-hidden relative-position full-width m--randomizer--value-field q-mx-lg'>
                       <div ref='elementAutoLottery' class='--auto'>{{ randomizerLottery.currentValue.length > 0 ? randomizerLottery.currentValue.join(' ') : '-' }}</div>
                       <div ref='elementTextLottery' class='--text'>{{ randomizerLottery.currentValue.length > 0 ? randomizerLottery.currentValue.join(' ') : '-' }}</div>
                     </div>

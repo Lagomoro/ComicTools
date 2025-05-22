@@ -2,6 +2,8 @@
 
 ### 兔萌社摊主工具，目标是让天下没有难做的摊主！
 
+https://lagomoro.github.io/ComicTools
+
 ### 功能列表
 * 一键摊宣
 ```
