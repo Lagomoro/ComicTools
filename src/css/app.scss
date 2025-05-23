@@ -39,6 +39,21 @@
   outline-offset: -3px;
 }
 
+.m--outline--solid--sm {
+  outline: 1px solid lightgrey;
+  outline-offset: -1px;
+}
+
+.m--outline--solid--md {
+  outline: 2px solid lightgrey;
+  outline-offset: -2px;
+}
+
+.m--outline--solid--lg {
+  outline: 3px solid lightgrey;
+  outline-offset: -3px;
+}
+
 .m--border--radius--q-btn {
   border-radius: 3px;
 }

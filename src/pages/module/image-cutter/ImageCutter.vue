@@ -38,9 +38,6 @@
                   <div class='fit relative-position'>
                     <q-img class='fit m--border--radius--md' fit='contain' :src='originImageSrc'></q-img>
                     <div class='m--outline--dash--md m--border--radius--md fit absolute-top'></div>
-<!--                    <div class='absolute-top full-width flex flex-center q-pa-md'>-->
-<!--                      <q-item-label caption>{{ originImageWidth }} px * {{ originImageHeight }} px</q-item-label>-->
-<!--                    </div>-->
                     <div class='absolute-bottom full-width flex flex-center q-pa-md'>
                       <q-btn unelevated color='negative' label='删除原图' @click='removeOriginImage'></q-btn>
                     </div>
@@ -61,11 +58,6 @@
                 <div class='fit relative-position'>
                   <canvas class='m--border--radius--md fit' ref='previewCanvas' width='3072' height='3072'></canvas>
                   <div class='m--outline--dash--md m--border--radius--md fit absolute-top'></div>
-<!--                  <template v-if='baseImageCutSize >= 0'>-->
-<!--                    <div class='absolute-top full-width flex flex-center q-pa-md'>-->
-<!--                      <q-item-label caption>{{ baseImageCutSize }} px / {{ Math.floor(Math.max(originImageWidth, originImageHeight) / 3) }} px</q-item-label>-->
-<!--                    </div>-->
-<!--                  </template>-->
                 </div>
               </div>
             </div>
@@ -187,11 +179,6 @@
                   <q-spinner-facebook/>
                 </template>
               </q-btn>
-<!--              <q-btn outline no-caps color='primary' label='保存为 Excel'>-->
-<!--                <template v-slot:loading>-->
-<!--                  <q-spinner-facebook/>-->
-<!--                </template>-->
-<!--              </q-btn>-->
               <q-btn unelevated no-caps color='primary' label='导出长图' @click='outputLongImage' :loading='outputLoading' :disable='!originImageSrc || !longImageExcel'>
                 <template v-slot:loading>
                   <q-spinner-facebook/>
@@ -202,11 +189,6 @@
         </q-item>
       </div>
       <q-separator></q-separator>
-      <div class='m--flex--0-0'>
-        <div class='fit row q-pb-md q-px-sm'>
-
-        </div>
-      </div>
       <div class='m--flex--1-1'>
 
       </div>
