@@ -45,3 +45,54 @@ export const E_PAPER_ALGORITHM_COLOR_SET: Record<EPaperAlgorithm, Color[]> = {
 // --------------------------------------------------------------------------------
 //# endregion
 // ================================================================================
+
+// ================================================================================
+//# region EPaperDisplayData
+// --------------------------------------------------------------------------------
+export enum EPaperDisplayType {
+  GDEY029F51H,
+}
+// --------------------------------------------------------------------------------
+export interface EPaperDisplayData {
+  width: number;
+  height: number;
+  color: number;
+  inch: number;
+  driver: string;
+  cutScreen: string;
+}
+// --------------------------------------------------------------------------------
+export const E_PAPER_DISPLAY_OPTION: { label: string; value: EPaperDisplayType }[] = [
+  { label: 'GDEY029F51H', value: EPaperDisplayType.GDEY029F51H },
+];
+// --------------------------------------------------------------------------------
+const DRIVER_GDEY029F51H = [
+  'F0DB00007A',
+  'A006012001500180',
+  'A40108' + 'A5020028' + 'A4010C' + 'A5020028' + 'A40103',
+  'A1024D78',
+  'A103000F29',
+  'A103010700',
+  'A10403105444',
+  'A1080605003F0A25121A',
+  'A1025037',
+  'A103600202',
+  'A1056100A80180',
+  'A102E71C',
+  'A102E322',
+  'A102B4D0',
+  'A102B503',
+  'A102E901',
+  'A1023008',
+  'A10104' + 'A40103',
+  'A30110',
+  'A2021200' + 'A40103',
+  'A2020200' + 'A40103' + 'A20207A5',
+];
+
+export const E_PAPER_DISPLAY_DATA_SET: Record<EPaperDisplayType, EPaperDisplayData> = {
+  [EPaperDisplayType.GDEY029F51H]: { width: 384, height: 168, color: 4, inch: 291, driver: DRIVER_GDEY029F51H.join(''), cutScreen: 'F0DA000003F00120' },
+};
+// --------------------------------------------------------------------------------
+//# endregion
+// ================================================================================

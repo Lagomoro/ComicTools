@@ -9,7 +9,7 @@
             </q-item-section>
             <q-item-section side class='q-mr-md'>
               <div class='q-gutter-x-sm'>
-                <q-btn unelevated no-caps color='primary' label='导出图片' @click='outputBaseImage' :loading='outputLoading' :disable='!originImageSrc'>
+                <q-btn unelevated no-caps color='primary' label='导出图片' @click.prevent.stop='saveCanvasData' :loading='outputLoading'>
                   <template v-slot:loading>
                     <q-spinner-facebook/>
                   </template>
@@ -25,154 +25,173 @@
           <div class='m--flex--1-1 flex flex-center'>
             <div class='full-height q-mx-sm'>
               <q-item-label header>标签预览</q-item-label>
-              <div style='width: 500px; height: 300px'>
+              <div class='m--good-display-nfc-e-paper--e-paper-container'>
                 <div class='fit flex flex-center relative-position m--outline--dash--md m--border--radius--md'>
                   <div class='absolute-top full-width flex flex-center' style='height: 66px'>
                     <q-item-label caption>GDEY029F51H (384 px * 168 px)</q-item-label>
                   </div>
-                  <div class='m--outline--solid--sm' style='width: 384px; height: 168px'>
-                    <div class='fit flex row'>
+                  <div class='m--outline--solid--sm bg-white' style='min-width: 394px; max-width: 394px; width: 394px;min-height: 168px; max-height: 168px; height: 168px' ref='outputElement'>
+                    <div class='fit flex row no-wrap'>
                       <div class='full-height m--flex--1-1'>
                         <div class='flex items-center' style='height: 30px'>
-                          <div class='fit flex items-center'>
-                            <q-item-label style='font-size: 20px' class='q-ml-sm'>光栅卡 • 游戏开发部角色信息</q-item-label>
+                          <div class='fit'>
+                            <div class='fit flex items-center m--good-display-nfc-e-paper--e-paper-pl'>
+                              <q-item-label class='text-bold q-ml-sm' style='font-size: 22px; transform: translate(0, -1px)'>{{ tagInputData.title }}</q-item-label>
+                            </div>
                           </div>
                         </div>
                         <div class='flex items-center' style='height: 30px'>
-                          <div class='fit flex items-center bg-orange'>
-                            <q-item-label style='font-family: 优设字由棒棒体, serif; font-size: 21px; transform: translate(0, -3px)' class='text-white q-ml-sm'>当期新品</q-item-label>
+                          <div :class='`fit ` + tagInputData.discountColor'>
+                            <div class='fit flex items-center m--good-display-nfc-e-paper--e-paper-pl'>
+                              <q-item-label :class='`m--font--ys-hello-font-bang-bang-ti ` + (tagInputData.discountColor === `bg-yellow` ? `text-black` : `text-white`) + ` q-ml-sm`' style='font-size: 21px; transform: translate(0, -3px)'>{{ tagInputData.discount }}</q-item-label>
+                            </div>
                           </div>
                         </div>
-                        <div class='flex items-center' style='height: 60px'>
-                          <div class='fit row'>
-                            <div class='row q-ml-sm'>
-                              <q-item-label style='font-family: Impact, serif; font-size: 60px; transform: translate(0, -6px)'>10.</q-item-label>
-                              <div>
-                                <q-item-label style='font-family: Impact, serif; font-size: 30px; transform: translate(0, 1px)'>00</q-item-label>
-                                <q-item-label style='font-size: 20px; margin-left: 2px; transform: translate(0, -5px)'>/张</q-item-label>
+                        <div class='flex items-center' style='height: 59px'>
+                          <div class='fit'>
+                            <div class='fit row no-wrap m--good-display-nfc-e-paper--e-paper-pl'>
+                              <template v-if='tagInputData.free'>
+                                <div class='m--flex--0-0 row no-wrap q-ml-sm'>
+                                  <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 50px; transform: translate(0, -5px); margin: 0'>无料</q-item-label>
+                                </div>
+                                <div class='m--flex--0-0 row no-wrap q-ml-sm'>
+                                  <div class='flex items-center full-height'>
+                                    <div style='width: 190px'>
+                                      <q-item-label style='font-size: 13px' class='text-no-wrap text-bold'>领取方式：</q-item-label>
+                                      <q-item-label style='font-size: 14px; margin-top: 2px' class='text-bold'>{{ tagInputData.freeInfo }}</q-item-label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </template>
+                              <template v-else>
+                                <template v-if='tagInputData.priceA && parseFloat(tagInputData.priceA) > 0'>
+                                  <div class='m--flex--0-0 row no-wrap q-ml-sm'>
+                                    <q-item-label class='m--font--impact' style='font-size: 57px; transform: translate(0, -4px)'>{{ tagInputData.priceA.split('.')[0] }}.</q-item-label>
+                                    <div>
+                                      <q-item-label class='m--font--impact' style='font-size: 30px'>{{ tagInputData.priceA.split('.')[1] ? (tagInputData.priceA.split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
+                                      <q-item-label class='text-bold' style='font-size: 20px; margin: 0 0 0 2px; transform: translate(0, -3px)'>/{{ tagInputData.unitA }}</q-item-label>
+                                    </div>
+                                  </div>
+                                  <div class='m--flex--0-0 q-ml-xs q-mr-sm'>
+                                    <q-item-label class='m--font--impact' style='font-size: 20px; transform: translate(0, 2px)'>{{ tagInputData.currency }}</q-item-label>
+                                  </div>
+                                </template>
+                                <template v-if='tagInputData.priceB && parseFloat(tagInputData.priceB) > 0'>
+                                  <div class='m--flex--0-0 row no-wrap q-ml-sm'>
+                                    <q-item-label class='m--font--impact' style='font-size: 57px; transform: translate(0, -4px)'>{{ tagInputData.priceB.split('.')[0] }}.</q-item-label>
+                                    <div>
+                                      <q-item-label class='m--font--impact' style='font-size: 30px'>{{ tagInputData.priceB.split('.')[1] ? (tagInputData.priceB.split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
+                                      <q-item-label class='text-bold' style='font-size: 20px; margin: 0 0 0 2px; transform: translate(0, -3px)'>/{{ tagInputData.unitB }}</q-item-label>
+                                    </div>
+                                  </div>
+                                  <div class='m--flex--0-0 q-ml-xs q-mr-sm'>
+                                    <q-item-label class='m--font--impact' style='font-size: 20px; transform: translate(0, 2px)'>{{ tagInputData.currency }}</q-item-label>
+                                  </div>
+                                </template>
+                              </template>
+                              <div class='m--flex--1-1'>
+
                               </div>
-                            </div>
-                            <div class='row q-ml-sm'>
-                              <q-item-label style='font-family: Impact, serif; font-size: 20px; transform: translate(0, 3px)'>CNY</q-item-label>
-                            </div>
-                            <div class='row q-ml-md'>
-                              <q-item-label style='font-family: Impact, serif; font-size: 60px; transform: translate(0, -6px)'>36.</q-item-label>
-                              <div>
-                                <q-item-label style='font-family: Impact, serif; font-size: 30px; transform: translate(0, 1px)'>00</q-item-label>
-                                <q-item-label style='font-size: 20px; margin-left: 2px; transform: translate(0, -5px)'>/套</q-item-label>
+                              <div class='m--flex--0-0 q-mr-xs'>
+                                <div class='flex flex-center' style='width: 51px; height: 59px'>
+                                  <div>
+                                    <template v-for='x in tagCalcData.qrCodeSize' :key='x'>
+                                      <div class='row no-wrap'>
+                                        <template v-for='y in tagCalcData.qrCodeSize' :key='y'>
+                                          <template v-if='tagCalcData.qrCodeData[(x - 1) * tagCalcData.qrCodeSize + (y - 1)] === 1'>
+                                            <div class='bg-black' style='width: 1px; height:1px'></div>
+                                          </template>
+                                          <template v-else>
+                                            <div class='bg-white' style='width: 1px; height:1px'></div>
+                                          </template>
+                                        </template>
+                                      </div>
+                                    </template>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                            <div class='row q-ml-sm'>
-                              <q-item-label style='font-family: Impact, serif; font-size: 20px; transform: translate(0, 3px)'>CNY</q-item-label>
+                              <template v-if='!tagInputData.info'>
+                                <div class='m--flex--0-0 q-mr-xs'>
+
+                                </div>
+                              </template>
                             </div>
                           </div>
                         </div>
                         <div class='flex items-center' style='height: 1px'>
-                          <div class='fit bg-black'></div>
-                        </div>
-                        <div class='flex items-center' style='height: 47px'>
-                          <div class='fit row'>
-                            <div class='q-ml-sm'>
-                              <q-item-label style='font-family: 优设字由棒棒体, serif; font-size: 11px'>MoroWorks</q-item-label>
-                              <q-item-label style='font-family: 优设字由棒棒体, serif; font-size: 26px; transform: translate(-2px, -3px); margin: 0'>兔萌社</q-item-label>
+                          <div class='fit'>
+                            <div class='fit bg-black'>
+
                             </div>
-                            <div class='q-ml-md'>
-                              <div class='flex column items-center'>
-                                <div class='flex row m--flex--1-1' style='height: 31px; padding: 4px 0 2px 0'>
-                                  <div class='bg-black' style='width: 4px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 1px'></div>
-                                  <div class='bg-white' style='width: 1px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 3px'></div>
-                                  <div class='bg-white' style='width: 2px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 2px'></div>
-                                  <div class='bg-white' style='width: 3px'></div>
-                                  <div class='bg-black' style='width: 4px'></div>
-                                </div>
-                                <div class='flex row m--flex--0-0'>
-                                  <q-item-label style='font-size: 10px'>MW-LM001-20250205</q-item-label>
+                          </div>
+                        </div>
+                        <div class='flex items-center' style='height: 48px'>
+                          <div class='fit'>
+                            <div class='fit row no-wrap m--good-display-nfc-e-paper--e-paper-pl'>
+                              <div class='m--flex--0-0 q-ml-sm'>
+                                <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 13px'>{{ tagInputData.logoEnglish }}</q-item-label>
+                                <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 28px; transform: translate(-2px, -4px); margin: 0'>{{ tagInputData.logoChinese }}</q-item-label>
+                              </div>
+                              <div class='m--flex--1-1' style='margin-left: 6px'>
+                                <div class='flex'>
+                                  <div class='flex column items-center'>
+                                    <div class='flex row m--flex--1-1' style='height: 34px; padding: 4px 0 2px 0'>
+                                      <template v-for='(data, index) in tagCalcData.barcode' :key='index'>
+                                        <template v-if='data === 1'>
+                                          <div class='bg-black' style='width: 1px'></div>
+                                        </template>
+                                        <template v-else>
+                                          <div class='bg-white' style='width: 1px'></div>
+                                        </template>
+                                      </template>
+                                    </div>
+                                    <div class='flex row m--flex--0-0'>
+                                      <q-item-label class='text-bold' style='font-size: 11px'>{{ tagInputData.barcodeText }}</q-item-label>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <div class='flex items-center q-ml-md'>
-                              <div>
-                                <q-item-label style='font-size: 11px'>材&nbsp;&nbsp;&nbsp;&nbsp;质：PVC</q-item-label>
-                                <q-item-label style='font-size: 11px; margin: 0'>工&nbsp;&nbsp;&nbsp;&nbsp;艺：透明光栅</q-item-label>
-                                <q-item-label style='font-size: 11px; margin: 0'>画&nbsp;&nbsp;&nbsp;&nbsp;师：Lagomoro</q-item-label>
+                              <div class='m--flex--0-0 q-mr-sm'>
+                                <div class='flex items-center full-height'>
+                                  <div class='text-bold' style='font-size: 12px; margin-top: 1px'>
+                                    <div class='row no-wrap'>
+                                      <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyA }}</q-item-label>
+                                      <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueA }}</q-item-label>
+                                    </div>
+                                    <div class='row no-wrap'>
+                                      <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyB }}</q-item-label>
+                                      <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueB }}</q-item-label>
+                                    </div>
+                                    <div class='row no-wrap'>
+                                      <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyC }}</q-item-label>
+                                      <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueC }}</q-item-label>
+                                    </div>
+                                  </div>
+                                  <div style='font-size: 11px'>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class='flex m--flex--0-0'>
-                        <div class='flex items-center' style='width: 20px'>
-                          <div class='fit flex flex-center bg-red'>
-                            <q-item-label style='font-size: 12px; transform: translate(-2px, 0); writing-mode: vertical-rl' class='text-white'>展&nbsp;&nbsp;会&nbsp;&nbsp;限&nbsp;&nbsp;定&nbsp;&nbsp;制&nbsp;&nbsp;品</q-item-label>
+                      <template v-if='tagInputData.info'>
+                        <div class='flex m--flex--0-0'>
+                          <div class='flex items-center' style='width: 20px'>
+                            <div :class='`fit flex flex-center ` + tagInputData.infoColor'>
+                              <div style='font-size: 12px' class='text-white'>
+                                <template v-for='(data, index) in tagInputData.info' :key='index'>
+                                  <q-item-label style='margin: 4px 0'>{{ data }}</q-item-label>
+                                </template>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </template>
                     </div>
                   </div>
                   <div class='absolute-bottom full-width flex flex-center q-pa-md'>
-                    <q-btn unelevated color='primary' label='刷新' @click='removeOriginImage'></q-btn>
+                    <q-btn unelevated color='primary' label='刷新' @click.prevent.stop='calcTagData'></q-btn>
                   </div>
                 </div>
               </div>
@@ -180,85 +199,71 @@
           </div>
           <div class='m--flex--1-1 flex flex-center'>
             <div class='full-height q-mx-sm'>
-              <template v-if='baseImageCutSize < 0'>
-                <q-item-label header>效果预览</q-item-label>
-              </template>
-              <template v-else>
-                <q-item-label header>效果预览：{{ baseImageCutSize }} px / {{ Math.floor(Math.max(originImageWidth, originImageHeight) / 3) }} px</q-item-label>
-              </template>
-              <div style='width: 300px; height: 300px'>
-                <div class='fit relative-position'>
-                  <canvas class='m--border--radius--md fit' ref='previewCanvas' width='3072' height='3072'></canvas>
-                  <div class='m--outline--dash--md m--border--radius--md fit absolute-top'></div>
+              <q-item-label header>基础信息</q-item-label>
+              <div class='q-gutter-y-sm' style='width: 300px'>
+                <q-input dense outlined clearable class='full-width' placeholder='请输入制品名称' v-model='tagInputData.title' label='制品名称'></q-input>
+                <div class='flex'>
+                  <q-input dense outlined clearable class='col' placeholder='请输入社团英文' v-model='tagInputData.logoEnglish' label='社团英文'></q-input>
+                  <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入社团中文' v-model='tagInputData.logoChinese' label='社团中文'></q-input>
+                </div>
+              </div>
+              <q-item-label header>促销信息</q-item-label>
+              <div class='q-gutter-y-sm' style='width: 300px'>
+                <q-input dense outlined clearable placeholder='请输入折扣文字' class='full-width' v-model='tagInputData.discount' label='折扣文字'></q-input>
+                <q-input dense outlined clearable placeholder='请输入提示文字' class='full-width' v-model='tagInputData.info' label='提示文字'></q-input>
+                <div class='flex'>
+                  <q-select dense outlined lazy-rules emit-value map-options hide-dropdown-icon options-dense class='col' label='折扣区域颜色' :options='colorPickerOption' v-model='tagInputData.discountColor'></q-select>
+                  <q-select dense outlined lazy-rules emit-value map-options hide-dropdown-icon options-dense class='col q-ml-md' label='提示区域颜色' :options='colorPickerOption' v-model='tagInputData.infoColor'></q-select>
                 </div>
               </div>
             </div>
           </div>
           <div class='m--flex--1-1 flex flex-center'>
             <div class='full-height q-mx-sm'>
-              <q-item-label header>刀线比率</q-item-label>
+              <q-item-label header>价格信息</q-item-label>
               <div class='q-gutter-y-sm' style='width: 300px'>
-                <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
-                  <template v-for='(data, index) in ratioList' :key='data.key'>
-                    <template v-if='data.key !== `input`'>
-                      <div class='m--flex--1-1 flex flex-center'>
-                        <q-radio dense :label='data.name' v-model='ratioSelect' :val='data.key' @click='repaintPreviewCanvas'>
-                          <q-tooltip anchor='center left' self='center right'>{{ data.value }}</q-tooltip>
-                        </q-radio>
-                      </div>
-                      <template v-if='index < ratioList.map(p => p.key).indexOf(`input`) - 1'>
-                        <q-separator vertical></q-separator>
-                      </template>
-                    </template>
-                  </template>
+                <div class='flex'>
+                  <q-input dense outlined clearable class='col' type='number' min='0' step='0.01' placeholder='请输入单价' v-model='tagInputData.priceA' label='单价'></q-input>
+                  <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入制品单位' v-model='tagInputData.unitA' label='制品单位'></q-input>
                 </div>
-                <q-input dense outlined clearable type='number' min='0' max='0.5' step='0.01' placeholder='请输入比率（0 ~ 0.5）'
-                         :class='`m--btn-input` + (ratioSelect === `input` ? ` --selected` : ``) + ` full-width`' input-class='m--btn-input--input'
-                         v-model='ratioInputValue' @focus='ratioSelect = `input`' @focusout='onRatioInputFocusOut'></q-input>
-              </div>
-              <q-item-label header>切割方式</q-item-label>
-              <div class='q-gutter-y-sm' style='width: 300px'>
-                <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
-                  <template v-for='(data, index) in modeList' :key='data.key'>
-                    <div class='m--flex--1-1 flex flex-center'>
-                      <q-radio dense :label='data.name' v-model='modeSelect' :val='data.key' @click='repaintPreviewCanvas'>
-                        <q-tooltip anchor='center left' self='center right'>{{ data.description }}</q-tooltip>
-                      </q-radio>
-                    </div>
-                    <template v-if='index < modeList.length - 1'>
-                      <q-separator vertical></q-separator>
-                    </template>
-                  </template>
+                <div class='flex'>
+                  <q-input dense outlined clearable class='col' type='number' min='0' step='0.01' placeholder='请输入套装价' v-model='tagInputData.priceB' label='套装价'></q-input>
+                  <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入套装单位' v-model='tagInputData.unitB' label='套装单位'></q-input>
                 </div>
+                <q-select dense outlined lazy-rules emit-value map-options hide-dropdown-icon options-dense class='full-width' label='货币单位' :options='currencyOption' v-model='tagInputData.currency'></q-select>
               </div>
-              <q-item-label header>导出尺寸</q-item-label>
+              <q-item-label header>无料信息</q-item-label>
               <div class='q-gutter-y-sm' style='width: 300px'>
                 <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
-                  <div class='m--flex--1-1 flex flex-center'>
-                    <q-radio dense label='原始像素' v-model='outputSelect' val='original'>
-                      <template v-if='baseImageCutSize < 0'>
-                        <q-tooltip anchor='center left' self='center right'>按照切割后的像素直接导出</q-tooltip>
-                      </template>
-                      <template v-else>
-                        <q-tooltip anchor='center left' self='center right'>按照切割后的像素直接导出（{{ baseImageCutSize }} px）</q-tooltip>
-                      </template>
-                    </q-radio>
-                  </div>
-                  <q-separator vertical></q-separator>
-                  <div class='m--flex--1-1 flex flex-center'>
-                    <q-radio dense label='填充切线' v-model='outputSelect' val='scale'>
-                      <template v-if='baseImageCutSize < 0'>
-                        <q-tooltip anchor='center left' self='center right'>切割后，放大到原图的 1/3 像素导出</q-tooltip>
-                      </template>
-                      <template v-else>
-                        <q-tooltip anchor='center left' self='center right'>切割后，放大到原图的 1/3 像素导出（{{ Math.floor(Math.max(originImageWidth, originImageHeight) / 3) }} px）</q-tooltip>
-                      </template>
-                    </q-radio>
+                  <div class='m--flex--1-1 flex items-center'>
+                    <q-checkbox dense class='q-ml-md' label='无料制品' v-model='tagInputData.free'></q-checkbox>
                   </div>
                 </div>
-                <q-input dense outlined clearable type='number' min='512' max='4096' step='512' placeholder='请输入目标像素（512 ~ 4096）'
-                         :class='`m--btn-input` + (outputSelect === `input` ? ` --selected` : ``) + ` full-width`' input-class='m--btn-input--input'
-                         v-model='outputInputValue' @focus='outputSelect = `input`' @focusout='onOutputInputFocusOut'></q-input>
+                <q-input dense outlined clearable placeholder='请输入无料领取条件' class='full-width' v-model='tagInputData.freeInfo' label='无料领取条件' @update:model-value='calcTagData'></q-input>
+              </div>
+            </div>
+          </div>
+          <div class='m--flex--1-1 flex flex-center'>
+            <div class='full-height q-mx-sm'>
+              <q-item-label header>标签信息</q-item-label>
+              <div class='q-gutter-y-sm' style='width: 300px'>
+                <div class='flex'>
+                  <q-input dense outlined clearable class='col' placeholder='请输入标签' v-model='tagInputData.keyA'></q-input>
+                  <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入标签的值' v-model='tagInputData.valueA'></q-input>
+                </div>
+                <div class='flex'>
+                  <q-input dense outlined clearable class='col' placeholder='请输入标签' v-model='tagInputData.keyB'></q-input>
+                  <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入标签的值' v-model='tagInputData.valueB'></q-input>
+                </div>
+                <div class='flex'>
+                  <q-input dense outlined clearable class='col' placeholder='请输入标签' v-model='tagInputData.keyC'></q-input>
+                  <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入标签的值' v-model='tagInputData.valueC'></q-input>
+                </div>
+              </div>
+              <q-item-label header>智能信息</q-item-label>
+              <div class='q-gutter-y-sm' style='width: 300px'>
+                <q-input dense outlined clearable placeholder='请输入二维码数据' class='full-width' v-model='tagInputData.qrCodeText' label='二维码数据' @update:model-value='calcTagData'></q-input>
+                <q-input dense outlined clearable placeholder='请输入条形码数据' class='full-width' v-model='tagInputData.barcodeText' label='条形码数据' @update:model-value='calcTagData'></q-input>
               </div>
             </div>
           </div>
@@ -273,7 +278,7 @@
             </q-item-section>
             <q-item-section side class='q-mr-md'>
               <div class='q-gutter-x-sm'>
-                <q-btn unelevated no-caps color='primary' label='写入智能价签' @click='createLaunchCard(`com.nexon.bluearchive`)' :loading='outputLoading'>
+                <q-btn unelevated no-caps color='primary' label='写入智能价签' @click.prevent.stop='exportToEPaper' :loading='outputLoading'>
                   <template v-slot:loading>
                     <q-spinner-facebook/>
                   </template>

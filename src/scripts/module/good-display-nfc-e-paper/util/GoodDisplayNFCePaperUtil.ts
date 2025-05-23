@@ -3,8 +3,8 @@
 // --------------------------------------------------------------------------------
 import { Color } from 'src/scripts/common/graphics';
 import {
-  E_PAPER_ALGORITHM_COLOR_SET,
-  EPaperAlgorithm
+  E_PAPER_ALGORITHM_COLOR_SET, E_PAPER_DISPLAY_DATA_SET,
+  EPaperAlgorithm, EPaperDisplayType
 } from 'src/scripts/module/good-display-nfc-e-paper/interface/common';
 // ================================================================================
 
@@ -50,15 +50,15 @@ export class GoodDisplayNFCePaperUtil {
       case EPaperAlgorithm.SixColors:
       case EPaperAlgorithm.FourGrey:
       case EPaperAlgorithm.SixteenGrey:
-        return this._applyDithering(imageData, colorSet, this._applyErrorDiffusionDithering);
+        return this._applyDithering(imageData, colorSet, this._applyErrorDiffusionDithering.bind(this));
       case EPaperAlgorithm.BlueNoise:
-        return this._applyDithering(imageData, colorSet, this._applyBlueNoiseDithering);
+        return this._applyDithering(imageData, colorSet, this._applyBlueNoiseDithering.bind(this));
       case EPaperAlgorithm.FloydSteinberg:
-        return this._applyDithering(imageData, colorSet, this._applyFloydSteinbergDithering);
+        return this._applyDithering(imageData, colorSet, this._applyFloydSteinbergDithering.bind(this));
       case EPaperAlgorithm.Atkinson:
-        return this._applyDithering(imageData, colorSet, this._applyAtkinsonDithering);
+        return this._applyDithering(imageData, colorSet, this._applyAtkinsonDithering.bind(this));
       default:
-        return this._applyDithering(imageData, colorSet, this._applyErrorDiffusionDithering);
+        return this._applyDithering(imageData, colorSet, this._applyErrorDiffusionDithering.bind(this));
     }
   };
 
@@ -120,7 +120,7 @@ export class GoodDisplayNFCePaperUtil {
       for (let _x = x <= 0 ? 0 : -1; _x <= 1 && x + _x < width; x++) {
         const targetX = x + _x;
         const targetY = y + _y;
-        const weight = errorWeight[_y][_x];
+        const weight = errorWeight[_y + 1][_x + 1];
         const index = (targetY * width + targetX) * 4;
         this._applyErrorToDataArray(dataArray, index, errorColor, weight);
       }
@@ -147,6 +147,97 @@ export class GoodDisplayNFCePaperUtil {
         this._distributeError(dataArray, width, height, x, y, oldColor.minusColorNew(newColor), [[1 / 8, 1 / 8, 1 / 8], [1 / 8, 0, 1 / 8], [1 / 8, 1 / 8, 1 / 8]]);
       }
     }
+  };
+  // ------------------------------------------------------------------------------
+  //# endregion
+  // ------------------------------------------------------------------------------
+  //# region Alpha
+  // ------------------------------------------------------------------------------
+  public static removeAlpha(imageData: ImageData){
+    const dataArray = imageData.data;
+    const width = imageData.width;
+    const height = imageData.height;
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = (y * width + x) * 4;
+        dataArray[index + 3] = 255;
+      }
+    }
+  };
+  // ------------------------------------------------------------------------------
+  //# endregion
+  // ------------------------------------------------------------------------------
+  //# region DataToHex
+  // ------------------------------------------------------------------------------
+  private static _numberToHex(input: number){
+    const output = input.toString(16);
+    return output.length === 1 ? `0${ output }` : output;
+  }
+
+  private static _numberToString(input: number){
+    const output = input.toString();
+    return `000${ output }`.substring(`000${ output }`.length - 4);
+  }
+
+  private static _colorToNumber4G(r: number, g: number, b: number){
+    if (r <= 100 && g <= 100 && b <= 100) {
+      return 0;
+    } else if (r >= 200 && g >= 200 && b >= 200) {
+      return 1;
+    } else {
+      if ((r + g + b) / 3 <= 127) {
+        return 3;
+      } else {
+        return 2;
+      }
+    }
+  }
+
+  public static imageDataToHexStringArray(imageData: ImageData, E_PAPER_DISPLAY_TYPE: EPaperDisplayType){
+    const ePaperDisplayData = E_PAPER_DISPLAY_DATA_SET[E_PAPER_DISPLAY_TYPE];
+
+    const dataArray: string[] = [];
+    let refreshCmd: string = '';
+    switch (ePaperDisplayData.color){
+      case 4:{
+        const imageBuffer: string[] = [];
+        for (let x = imageData.width - 1; x > 0; x--) {
+          for (let y = 0; y < imageData.height / 4; y++) {
+            let temp = 0;
+            for (let k = 0; k < 4; k++) {
+              const index = ((y * 4 + k) * imageData.width + x) * 4;
+              const r = imageData.data[index];
+              const g = imageData.data[index + 1];
+              const b = imageData.data[index + 2];
+              temp = temp * 4 + this._colorToNumber4G(r, g, b);
+            }
+            imageBuffer.push(this._numberToString(temp));
+          }
+        }
+        for(let i = 0; i < Math.ceil(imageBuffer.length / 250); i++){
+          const length = Math.min(250, imageBuffer.length - 250 * i);
+          let data = `F0D200${ this._numberToHex(i) }${ this._numberToHex(length) }=`;
+          for (let j = 0; j < length; j++) {
+            data += imageBuffer[250 * i + j];
+          }
+          dataArray.push(data);
+        }
+        refreshCmd = 'F0D4858000';
+        break;
+      }
+      default:
+        refreshCmd = 'F0D4058000';
+        break;
+    }
+
+    return [
+      'F0DB020000',
+      ePaperDisplayData.driver,
+      ePaperDisplayData.cutScreen,
+      ...dataArray,
+      refreshCmd,
+    ]
   };
   // ------------------------------------------------------------------------------
   //# endregion
