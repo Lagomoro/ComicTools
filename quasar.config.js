@@ -33,6 +33,7 @@ module.exports = configure(function (/* ctx */) {
       'i18n',
       'axios',
       'mdi-font',
+      'font',
       'widgets',
     ],
 
