@@ -34,7 +34,7 @@
               </q-item-section>
               <q-item-section side class='q-mr-md'>
                 <div class='q-gutter-x-sm'>
-                  <q-btn unelevated no-caps color='primary' label='复制碰一碰' @click='copyFromNfcTag' :loading='outputLoading'>
+                  <q-btn unelevated no-caps color='primary' label='复制碰一碰' @click.prevent.stop='copyFromNfcTag' :loading='outputLoading'>
                     <template v-slot:loading>
                       <q-spinner-facebook/>
                     </template>
@@ -53,7 +53,7 @@
               </q-item-section>
               <q-item-section side class='q-mr-md'>
                 <div class='q-gutter-x-sm'>
-                  <q-btn unelevated no-caps color='primary' label='扫描收款码' @click='scanFromPayCode' :loading='outputLoading'>
+                  <q-btn unelevated no-caps color='primary' label='扫描收款码' @click.prevent.stop='scanFromPayCode' :loading='outputLoading'>
                     <template v-slot:loading>
                       <q-spinner-facebook/>
                     </template>
@@ -109,7 +109,7 @@
 
           <q-card-section class='absolute-top-right'>
             <div class='flex-center' style='width: 32px; height: 32px'>
-              <q-btn dense flat icon='mdi-close' @click='closeDialog()'/>
+              <q-btn dense flat icon='mdi-close' @click.prevent.stop='closeDialog()'/>
             </div>
           </q-card-section>
 
@@ -133,7 +133,7 @@
                     <q-icon class='q-mb-lg' size='40px' name='mdi-nfc'></q-icon>
                     <q-item-label class='text-h6'>请将手机远离 NFC 标签</q-item-label>
                     <q-item-label class='text-h6'>否则旧标签将被覆盖</q-item-label>
-                    <q-btn unelevated no-caps class='q-mt-lg q-px-lg' size='lg' color='primary' label='下一步' @click='onDialogCallback'></q-btn>
+                    <q-btn unelevated no-caps class='q-mt-lg q-px-lg' size='lg' color='primary' label='下一步' @click.prevent.stop='onDialogCallback'></q-btn>
                   </div>
                 </div>
               </template>

@@ -9,7 +9,7 @@
             </q-item-section>
             <q-item-section side class='q-mr-md'>
               <div class='q-gutter-x-sm'>
-                <q-btn unelevated no-caps color='primary' label='导出九宫格' @click='outputBaseImage' :loading='outputLoading' :disable='!originImageSrc'>
+                <q-btn unelevated no-caps color='primary' label='导出九宫格' @click.prevent.stop='outputBaseImage' :loading='outputLoading' :disable='!originImageSrc'>
                   <template v-slot:loading>
                     <q-spinner-facebook/>
                   </template>
@@ -39,7 +39,7 @@
                     <q-img class='fit m--border--radius--md' fit='contain' :src='originImageSrc'></q-img>
                     <div class='m--outline--dash--md m--border--radius--md fit absolute-top'></div>
                     <div class='absolute-bottom full-width flex flex-center q-pa-md'>
-                      <q-btn unelevated color='negative' label='删除原图' @click='removeOriginImage'></q-btn>
+                      <q-btn unelevated color='negative' label='删除原图' @click.prevent.stop='removeOriginImage'></q-btn>
                     </div>
                   </div>
                 </template>
@@ -70,7 +70,7 @@
                   <template v-for='(data, index) in ratioList' :key='data.key'>
                     <template v-if='data.key !== `input`'>
                       <div class='m--flex--1-1 flex flex-center'>
-                        <q-radio dense :label='data.name' v-model='ratioSelect' :val='data.key' @click='repaintPreviewCanvas'>
+                        <q-radio dense :label='data.name' v-model='ratioSelect' :val='data.key' @click.prevent.stop='repaintPreviewCanvas'>
                           <q-tooltip anchor='center left' self='center right'>{{ data.value }}</q-tooltip>
                         </q-radio>
                       </div>
@@ -89,7 +89,7 @@
                 <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
                   <template v-for='(data, index) in modeList' :key='data.key'>
                     <div class='m--flex--1-1 flex flex-center'>
-                      <q-radio dense :label='data.name' v-model='modeSelect' :val='data.key' @click='repaintPreviewCanvas'>
+                      <q-radio dense :label='data.name' v-model='modeSelect' :val='data.key' @click.prevent.stop='repaintPreviewCanvas'>
                         <q-tooltip anchor='center left' self='center right'>{{ data.description }}</q-tooltip>
                       </q-radio>
                     </div>
@@ -157,7 +157,7 @@
                     </div>
                     <div class='m--outline--dash--md m--border--radius--md fit absolute-top'></div>
                     <div class='absolute-bottom full-width flex flex-center q-pa-md'>
-                      <q-btn unelevated color='negative' label='清空配置' @click='removeLongImageExcel'></q-btn>
+                      <q-btn unelevated color='negative' label='清空配置' @click.prevent.stop='removeLongImageExcel'></q-btn>
                     </div>
                   </div>
                 </template>
@@ -174,12 +174,12 @@
           </q-item-section>
           <q-item-section side class='q-mr-md'>
             <div class='q-gutter-x-sm'>
-              <q-btn outline no-caps color='primary' label='获取示例' @click='exportDefaultExcel' :loading='outputLoading'>
+              <q-btn outline no-caps color='primary' label='获取示例' @click.prevent.stop='exportDefaultExcel' :loading='outputLoading'>
                 <template v-slot:loading>
                   <q-spinner-facebook/>
                 </template>
               </q-btn>
-              <q-btn unelevated no-caps color='primary' label='导出长图' @click='outputLongImage' :loading='outputLoading' :disable='!originImageSrc || !longImageExcel'>
+              <q-btn unelevated no-caps color='primary' label='导出长图' @click.prevent.stop='outputLongImage' :loading='outputLoading' :disable='!originImageSrc || !longImageExcel'>
                 <template v-slot:loading>
                   <q-spinner-facebook/>
                 </template>

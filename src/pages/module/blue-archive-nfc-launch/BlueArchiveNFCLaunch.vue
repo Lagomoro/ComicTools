@@ -31,7 +31,7 @@
               </q-item-section>
               <q-item-section side class='q-mr-md'>
                 <div class='q-gutter-x-sm'>
-                  <q-btn unelevated no-caps color='primary' label='写入国服' @click='createLaunchCard(`com.RoamingStar.BlueArchive`)' :loading='outputLoading'>
+                  <q-btn unelevated no-caps color='primary' label='写入国服' @click.prevent.stop='createLaunchCard(`com.RoamingStar.BlueArchive`)' :loading='outputLoading'>
                     <template v-slot:loading>
                       <q-spinner-facebook/>
                     </template>
@@ -50,7 +50,7 @@
               </q-item-section>
               <q-item-section side class='q-mr-md'>
                 <div class='q-gutter-x-sm'>
-                  <q-btn unelevated no-caps color='primary' label='写入国际服' @click='createLaunchCard(`com.nexon.bluearchive`)' :loading='outputLoading'>
+                  <q-btn unelevated no-caps color='primary' label='写入国际服' @click.prevent.stop='createLaunchCard(`com.nexon.bluearchive`)' :loading='outputLoading'>
                     <template v-slot:loading>
                       <q-spinner-facebook/>
                     </template>
@@ -69,7 +69,7 @@
               </q-item-section>
               <q-item-section side class='q-mr-md'>
                 <div class='q-gutter-x-sm'>
-                  <q-btn unelevated no-caps color='primary' label='写入日服' @click='createLaunchCard(`com.YostarJP.BlueArchive`)' :loading='outputLoading'>
+                  <q-btn unelevated no-caps color='primary' label='写入日服' @click.prevent.stop='createLaunchCard(`com.YostarJP.BlueArchive`)' :loading='outputLoading'>
                     <template v-slot:loading>
                       <q-spinner-facebook/>
                     </template>
@@ -125,7 +125,7 @@
 
           <q-card-section class='absolute-top-right'>
             <div class='flex-center' style='width: 32px; height: 32px'>
-              <q-btn dense flat icon='mdi-close' @click='closeDialog()'/>
+              <q-btn dense flat icon='mdi-close' @click.prevent.stop='closeDialog()'/>
             </div>
           </q-card-section>
 
