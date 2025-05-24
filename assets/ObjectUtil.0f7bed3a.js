@@ -1,0 +1,1 @@
+class f{static toString(n,i,r){const s=new WeakSet;return JSON.stringify(n,(o,t)=>{if(!(t instanceof Function)){if(t instanceof Object){if(s.has(t))return;s.add(t)}else if(i){const e=i(o,t);if(e!==void 0)return e}return t}},r)}static deepCopy(n){return JSON.parse(this.toString(n))}}export{f as O};
