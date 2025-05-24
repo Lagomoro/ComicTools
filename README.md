@@ -2,6 +2,7 @@
 
 ### 兔萌社摊主工具，目标是让天下没有难做的摊主！
 
+Github Pages
 https://lagomoro.github.io/ComicTools
 
 ### 功能列表
@@ -17,6 +18,14 @@ https://lagomoro.github.io/ComicTools
 ```
 制作蔚蓝档案 NFC 启动卡
 ```
+* 智能价签写入
+```
+更新智能 NFC 价签
+```
+* 随机数生成器
+```
+使用来自大气噪音的真随机进行抽奖
+```
 
 ### Install the dependencies
 ```bash
@@ -30,7 +39,6 @@ npm install
 quasar dev
 ```
 
-
 ### Lint the files
 ```bash
 yarn lint
@@ -38,15 +46,12 @@ yarn lint
 npm run lint
 ```
 
-
 ### Format the files
 ```bash
 yarn format
 # or
 npm run format
 ```
-
-
 
 ### Build the app for production
 ```bash
