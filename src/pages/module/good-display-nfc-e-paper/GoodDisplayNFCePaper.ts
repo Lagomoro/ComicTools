@@ -137,13 +137,20 @@ export default defineComponent({
     //# region calcData
     // ------------------------------------------------------------------------------
     function calcTagData(){
-      const qrcode = QRCode.create(tagInputData.value.qrCodeText, { errorCorrectionLevel: 'H' });
-      tagCalcData.value.qrCodeData = qrcode.modules.data;
-      tagCalcData.value.qrCodeSize = qrcode.modules.size;
+      tagCalcData.value.qrCodeData = new Uint8Array(0);
+      tagCalcData.value.qrCodeSize = 0;
+      if(tagInputData.value.qrCodeText) {
+        const qrcode = QRCode.create(tagInputData.value.qrCodeText, { errorCorrectionLevel: 'H' });
+        tagCalcData.value.qrCodeData = qrcode.modules.data;
+        tagCalcData.value.qrCodeSize = qrcode.modules.size;
+      }
 
-      const data: any = {};
-      JsBarcode(data, tagInputData.value.barcodeText);
-      tagCalcData.value.barcode = data.encodings[0].data.split('').map((p: string) => parseInt(p));
+      tagCalcData.value.barcode = [];
+      if(tagInputData.value.barcodeText) {
+        const data: any = {};
+        JsBarcode(data, tagInputData.value.barcodeText);
+        tagCalcData.value.barcode = data.encodings[0].data.split('').map((p: string) => parseInt(p));
+      }
     }
     // ------------------------------------------------------------------------------
     async function _calcCanvasData(){
