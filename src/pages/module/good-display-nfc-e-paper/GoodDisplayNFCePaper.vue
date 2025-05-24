@@ -278,6 +278,7 @@
             </q-item-section>
             <q-item-section side class='q-mr-md'>
               <div class='q-gutter-x-sm'>
+                <q-btn unelevated no-caps color='primary' label='下载安卓运行库' href='./static/ComicTools.apk' download='ComicTools.apk'></q-btn>
                 <q-btn unelevated no-caps color='primary' label='写入智能价签' @click.prevent.stop='exportToEPaper' :loading='outputLoading'>
                   <template v-slot:loading>
                     <q-spinner-facebook/>
