@@ -10,7 +10,10 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build",
+    "web--dev": "node ./build/scripts/buildAssets.js && quasar dev",
+    "web--build": "node ./build/scripts/buildAssets.js && quasar build",
+    "web--build-assets": "node ./build/scripts/buildAssets.js"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -18,6 +21,7 @@
     "axios": "1.8.2",
     "copy-to-clipboard": "^3.3.3",
     "exceljs": "^4.4.0",
+    "favicons": "^7.2.0",
     "html2canvas": "^1.4.1",
     "html5-qrcode": "^2.3.8",
     "jsbarcode": "^3.11.6",
