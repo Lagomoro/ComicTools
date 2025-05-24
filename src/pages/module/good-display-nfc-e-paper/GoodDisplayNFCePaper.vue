@@ -177,9 +177,9 @@
                       </div>
                       <template v-if='tagInputData.info'>
                         <div class='flex m--flex--0-0'>
-                          <div class='flex items-center' style='width: 20px'>
-                            <div :class='`fit flex flex-center ` + tagInputData.infoColor'>
-                              <div style='font-size: 12px' class='text-white'>
+                          <div :class='`flex items-center ` + tagInputData.infoColor' style='width: 20px'>
+                            <div class='fit flex flex-center'>
+                              <div style='font-size: 12px' :class='tagInputData.infoColor === `bg-yellow` ? `text-black` : `text-white`'>
                                 <template v-for='(data, index) in tagInputData.info' :key='index'>
                                   <q-item-label style='margin: 4px 0'>{{ data }}</q-item-label>
                                 </template>
