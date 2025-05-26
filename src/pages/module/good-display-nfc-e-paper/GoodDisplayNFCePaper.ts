@@ -2,6 +2,7 @@
 // * Module dependencies
 // --------------------------------------------------------------------------------
 import { defineComponent, onMounted, ref } from 'vue';
+import { isAndroid, isChrome } from 'vue-device-detect';
 import QRCode from 'qrcode';
 import JsBarcode from 'jsbarcode';
 import html2canvas from 'html2canvas';
@@ -197,6 +198,8 @@ export default defineComponent({
       // ------------------------------------------------------------------------------
       // * Class
       // ------------------------------------------------------------------------------
+      isAndroid,
+      isChrome,
       // ------------------------------------------------------------------------------
       // * Constant
       // ------------------------------------------------------------------------------

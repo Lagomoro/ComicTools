@@ -6,3 +6,20 @@
 .m--good-display-nfc-e-paper--e-paper-pl {
   padding-left: 8px;
 }
+
+.m--good-display-nfc-e-paper--status {
+  &.negative {
+    border: 1px solid rgba(193, 0, 21, 1);
+    background-color: rgba(193, 0, 21, 0.2);
+  }
+
+  &.warning {
+    border: 1px solid rgba(242, 192, 55, 1);
+    background-color: rgba(242, 192, 55, 0.2);
+  }
+
+  &.positive {
+    border: 1px solid rgba(33, 186, 69, 1);
+    background-color: rgba(33, 186, 69, 0.2);
+  }
+}

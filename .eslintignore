@@ -6,3 +6,6 @@
 .eslintrc.js
 /src-ssr
 /quasar.config.*.temporary.compiled*
+
+/build
+*.js

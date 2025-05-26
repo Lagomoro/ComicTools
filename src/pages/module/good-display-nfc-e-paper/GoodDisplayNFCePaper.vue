@@ -274,25 +274,55 @@
         <div class='fit row q-px-sm'>
           <q-item class='fit q-pa-none no-wrap text-no-wrap'>
             <q-item-section>
-              <q-item-label header>GDEY029F51H</q-item-label>
-            </q-item-section>
-            <q-item-section side class='q-mr-md'>
-              <div class='q-gutter-x-sm'>
-                <q-btn unelevated no-caps color='primary' label='下载安卓运行库' href='./static/ComicTools.apk' download='ComicTools.apk'></q-btn>
-                <q-btn unelevated no-caps color='primary' label='写入智能价签' @click.prevent.stop='exportToEPaper' :loading='outputLoading'>
-                  <template v-slot:loading>
-                    <q-spinner-facebook/>
-                  </template>
-                </q-btn>
-              </div>
+              <q-item-label header>智能价签写入</q-item-label>
             </q-item-section>
           </q-item>
         </div>
       </div>
       <q-separator></q-separator>
-      <div class='m--flex--1-1'>
+      <template v-if='isAndroid && isChrome'>
+        <div class='m--flex--0-0'>
+          <div class='fit row q-px-sm'>
+            <q-item class='fit q-pa-none no-wrap text-no-wrap'>
+              <q-item-section>
+                <q-item-label header>GDEY029F51H</q-item-label>
+              </q-item-section>
+              <q-item-section side class='q-mr-md'>
+                <div class='q-gutter-x-sm'>
+                  <q-btn unelevated no-caps color='primary' label='下载安卓运行库' href='./static/ComicTools.apk' download='ComicTools.apk'></q-btn>
+                  <q-btn unelevated no-caps color='primary' label='写入智能价签' @click.prevent.stop='exportToEPaper' :loading='outputLoading'>
+                    <template v-slot:loading>
+                      <q-spinner-facebook/>
+                    </template>
+                  </q-btn>
+                </div>
+              </q-item-section>
+            </q-item>
+          </div>
+        </div>
+        <q-separator></q-separator>
+        <div class='m--flex--1-1'>
 
-      </div>
+        </div>
+      </template>
+      <template v-else>
+        <div class='m--flex--0-0'>
+          <q-card flat bordered class='m--good-display-nfc-e-paper--status negative text-negative q-ma-md'>
+            <q-item class='q-pl-none q-py-sm'>
+              <q-item-section avatar>
+                <q-icon class='q-ml-md' name='mdi-cellphone-remove'></q-icon>
+              </q-item-section>
+              <q-item-section class='q-pl-none'>
+                <q-item-label>不受支持的平台</q-item-label>
+                <q-item-label caption class='text-negative'>该工具只能在支持 NFC 功能的安卓设备上使用，且浏览器必须是 Chrome 内核。</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-card>
+        </div>
+        <div class='m--flex--1-1'>
+
+        </div>
+      </template>
     </div>
   </q-page>
 </template>

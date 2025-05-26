@@ -26,17 +26,17 @@ class BuildAssets {
   }
   // ------------------------------------------------------------------------------
   async buildFavicons() {
-    console.log(`Building Favicons`);
+    console.log('Building Favicons');
     const response = await favicons('./build/assets/icon.png', { path: './public', icon: { favicons: true }});
     fs.mkdirSync('./public/icons', { recursive: true });
     response.images.map(async (image) => {
-      if (image.name.startsWith('favicon.ico')) {
+      if (image.name === 'favicon.ico') {
         console.log(`Building Favicons: ${ image.name }`);
-        fs.writeFileSync(path.join('./public', image.name), image.contents);
+        fs.writeFileSync(path.join('public', image.name), image.contents);
       }
       if (image.name.startsWith('favicon-')) {
         console.log(`Building Favicons: ${ image.name }`);
-        fs.writeFileSync(path.join('./public/icons', image.name), image.contents);
+        fs.writeFileSync(path.join('public/icons', image.name), image.contents);
       }
     });
   }
