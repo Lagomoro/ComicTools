@@ -126,7 +126,7 @@ export interface FullConfig {
 }
 export type Config = Partial<Record<ConfigKey, ConfigValue>>;
 // --------------------------------------------------------------------------------
-export type DataKey = 'id' | 'name' | 'image' | 'watermark' | 'category' | 'price' | 'size' | 'description' | 'material' | 'manufacture' | 'producer' | 'author' | 'timestamp' | 'titleBefore' | 'textBefore' | 'titleAfter' | 'textAfter';
+export type DataKey = 'id' | 'name' | 'image' | 'watermark' | 'category' | 'group' | 'price' | 'unit' | 'currency' | 'description' | 'size' | 'material' | 'manufacture' | 'producer' | 'author' | 'timestamp' | 'storage' | 'titleBefore' | 'textBefore' | 'titleAfter' | 'textAfter';
 export type DataValue = number | string | boolean | ArrayBuffer | null;
 
 export interface DataHeader {
@@ -138,25 +138,28 @@ export interface DataHeader {
   description: string;
   defaultValue: DataValue;
 }
-const imageDescription = '制品展示图片，需要将图片插入 Excel 并且放在这个单元格内。'
 export const DATA_HEADER_LIST: DataHeader[] = [
-  { key: 'id',          optional: false, width: 10, type: 'number',  name: 'ID',     description: '数据 ID，是一个 Sheet 内唯一的数字', defaultValue: 1 },
-  { key: 'name',        optional: false, width: 30, type: 'string',  name: '名称',    description: '制品名称',                        defaultValue: '空气' },
-  { key: 'image',       optional: false, width: 10, type: 'image',   name: '图片',    description: imageDescription,                defaultValue: null },
-  { key: 'watermark',   optional: false, width: 15, type: 'boolean', name: '水印',    description: '是否添加水印',                     defaultValue: false },
-  { key: 'category',    optional: true,  width: 15, type: 'string',  name: '品类',    description: '制品分类',                        defaultValue: '亚克力色纸' },
-  { key: 'price',       optional: true,  width: 10, type: 'number',  name: '价格',    description: '制品有料交换价格，<= 0 生成无料',     defaultValue: 0 },
-  { key: 'description', optional: true,  width: 30, type: 'string',  name: '简介',    description: '制品简介',                        defaultValue: '用于测试的空气谷' },
-  { key: 'size',        optional: true,  width: 20, type: 'string',  name: '规格',    description: '制品的长宽高',                     defaultValue: 'W140mm*H190mm*D2mm' },
-  { key: 'material',    optional: true,  width: 20, type: 'string',  name: '材质',    description: '制品使用的材质',                   defaultValue: '纸 / 亚克力' },
-  { key: 'manufacture', optional: true,  width: 20, type: 'string',  name: '工艺',    description: '制品使用的生产工艺',                defaultValue: '触感膜 / 流沙银包边' },
-  { key: 'producer',    optional: true,  width: 20, type: 'string',  name: '制造设计', description: '制品制造、设计的发行方',             defaultValue: '空气社 Airworks' },
-  { key: 'author',      optional: true,  width: 15, type: 'string',  name: '作者',    description: '制品作者',                        defaultValue: '作者名称' },
-  { key: 'timestamp',   optional: true,  width: 15, type: 'string',  name: '定稿日期', description: '制品的定稿日期',                   defaultValue: '2024年4月31日' },
-  { key: 'titleBefore', optional: true,  width: 15, type: 'string',  name: '前置标题', description: '在制品图片前展示的注意事项标题',       defaultValue: null },
-  { key: 'textBefore',  optional: true,  width: 30, type: 'string',  name: '前置文字', description: '在制品图片前展示的注意事项文字',       defaultValue: null },
-  { key: 'titleAfter',  optional: true,  width: 15, type: 'string',  name: '后置标题', description: '在制品图片后展示的注意事项标题',       defaultValue: null },
-  { key: 'textAfter',   optional: true,  width: 30, type: 'string',  name: '后置文字', description: '在制品图片后展示的注意事项文字',       defaultValue: null },
+  { key: 'id',          optional: false, width: 10, type: 'number',  name: 'ID',     description: '数据 ID，是一个 Sheet 内唯一的数字',                   defaultValue: 1 },
+  { key: 'name',        optional: false, width: 30, type: 'string',  name: '名称',    description: '制品名称',                                          defaultValue: '空气' },
+  { key: 'image',       optional: false, width: 10, type: 'image',   name: '图片',    description: '制品展示图片，需要将图片插入 Excel 并且放在这个单元格内。', defaultValue: null },
+  { key: 'watermark',   optional: false, width: 15, type: 'boolean', name: '水印',    description: '是否添加水印',                                       defaultValue: false },
+  { key: 'category',    optional: false, width: 15, type: 'string',  name: '分类',    description: '制品分类',                                          defaultValue: '亚克力色纸' },
+  { key: 'group',       optional: true,  width: 10, type: 'string',  name: '分组',    description: '展示分组',                                          defaultValue: 'default' },
+  { key: 'price',       optional: true,  width: 10, type: 'number',  name: '价格',    description: '制品有料交换价格，<= 0 生成无料',                       defaultValue: 0 },
+  { key: 'unit',        optional: true,  width: 10, type: 'string',  name: '制品单位', description: '制品的单位',                                        defaultValue: '个' },
+  { key: 'currency',    optional: true,  width: 15, type: 'string',  name: '货币单位', description: '价格的货币单位',                                     defaultValue: 'CNY' },
+  { key: 'description', optional: true,  width: 30, type: 'string',  name: '简介',    description: '制品简介',                                          defaultValue: '用于测试的空气谷' },
+  { key: 'size',        optional: true,  width: 20, type: 'string',  name: '规格',    description: '制品的长宽高',                                       defaultValue: 'W140mm*H190mm*D2mm' },
+  { key: 'material',    optional: true,  width: 20, type: 'string',  name: '材质',    description: '制品使用的材质',                                     defaultValue: '纸 / 亚克力' },
+  { key: 'manufacture', optional: true,  width: 20, type: 'string',  name: '工艺',    description: '制品使用的生产工艺',                                  defaultValue: '触感膜 / 流沙银包边' },
+  { key: 'producer',    optional: true,  width: 20, type: 'string',  name: '制造设计', description: '制品制造、设计的发行方',                               defaultValue: '空气社 Airworks' },
+  { key: 'author',      optional: true,  width: 15, type: 'string',  name: '作者',    description: '制品作者',                                          defaultValue: '作者名称' },
+  { key: 'timestamp',   optional: true,  width: 15, type: 'string',  name: '定稿日期', description: '制品的定稿日期',                                     defaultValue: '2024年4月31日' },
+  { key: 'storage',     optional: true,  width: 15, type: 'number',  name: '库存',    description: '库存数量',                                          defaultValue: 0 },
+  { key: 'titleBefore', optional: true,  width: 15, type: 'string',  name: '前置标题', description: '在制品图片前展示的注意事项标题',                        defaultValue: null },
+  { key: 'textBefore',  optional: true,  width: 30, type: 'string',  name: '前置文字', description: '在制品图片前展示的注意事项文字',                        defaultValue: null },
+  { key: 'titleAfter',  optional: true,  width: 15, type: 'string',  name: '后置标题', description: '在制品图片后展示的注意事项标题',                        defaultValue: null },
+  { key: 'textAfter',   optional: true,  width: 30, type: 'string',  name: '后置文字', description: '在制品图片后展示的注意事项文字',                        defaultValue: null },
 ];
 
 export type Data = Partial<Record<DataKey, DataValue>>;
@@ -171,6 +174,7 @@ for (const configSlot of CONFIG_SLOT_LIST) {
   defaultConfig[configSlot.key] = configSlot.defaultValue;
 }
 export const DEFAULT_LONG_IMAGE_EXCEL: LongImageExcel = { config: defaultConfig, data: {} };
+
 const defaultData: Data = {};
 for (const dataHeader of DATA_HEADER_LIST) {
   defaultData[dataHeader.key] = dataHeader.defaultValue;

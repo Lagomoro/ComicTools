@@ -32,6 +32,33 @@ export class ExcelUtil {
   // ------------------------------------------------------------------------------
   //# endregion
   // ------------------------------------------------------------------------------
+  //# region Image
+  // ------------------------------------------------------------------------------
+  public static getWorksheetImageList(workbook: ExcelJS.Workbook, worksheet: ExcelJS.Worksheet): { rowNumber: number; colNumber: number; buffer: ArrayBuffer }[] {
+    const output: { rowNumber: number; colNumber: number; buffer: ArrayBuffer }[] = [];
+    for (const image of worksheet.getImages()) {
+      const media = workbook.model.media.find(m => (m as unknown as { index: number }).index === image.imageId as unknown as number);
+      if(media){
+        output.push({ rowNumber: image.range.tl.nativeRow + 1, colNumber: image.range.tl.nativeCol + 1, buffer: media.buffer });
+      }
+    }
+    return output;
+  }
+  // ------------------------------------------------------------------------------
+  //# endregion
+  // ------------------------------------------------------------------------------
+  //# region Color
+  // ------------------------------------------------------------------------------
+  public static argbStringToColor(argb: string): string {
+    const r = parseInt(argb.substring(2, 4), 16);
+    const g = parseInt(argb.substring(4, 6), 16);
+    const b = parseInt(argb.substring(6, 8), 16);
+    const a = parseInt(argb.substring(0, 2), 16);
+    return `rgba(${ r }, ${ g }, ${ b }, ${ a / 255 })`;
+  };
+  // ------------------------------------------------------------------------------
+  //# endregion
+  // ------------------------------------------------------------------------------
 }
 // --------------------------------------------------------------------------------
 //# endregion

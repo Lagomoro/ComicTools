@@ -13,6 +13,7 @@ import {
 } from 'src/scripts/module/image-cutter/interface/common';
 import ObjectUtil from 'src/scripts/util/ObjectUtil';
 import HtmlUtil from 'src/scripts/util/HtmlUtil';
+import ExcelUtil from 'src/scripts/util/ExcelUtil';
 // ================================================================================
 
 // ================================================================================
@@ -145,7 +146,7 @@ export class ImageCutterUtil {
   // ------------------------------------------------------------------------------
   //# region LongImageExcel
   // ------------------------------------------------------------------------------
-  public static exportLongImageExcel(data: LongImageExcel): ExcelJS.Workbook {
+  public static exportLongImageExcel(excelData: LongImageExcel): ExcelJS.Workbook {
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'Lagomoro';
     workbook.lastModifiedBy = 'Lagomoro';
@@ -183,7 +184,7 @@ export class ImageCutterUtil {
       sheetConfig.getColumn(i + 1).width = configHeader.width;
     }
     for(const configSlot of CONFIG_SLOT_LIST){
-      if(configSlot.key in data.config){
+      if(configSlot.key in excelData.config){
         if(configSlot.type === 'color') {
           const row = sheetConfig.addRow(configSlotKeyList.map(p => p === 'value' ? '' : configSlot[p as keyof ConfigSlot]));
           row.height = 21;
@@ -198,8 +199,8 @@ export class ImageCutterUtil {
 
     const dataHeaderRow = DATA_HEADER_LIST.map(p => `${ p.optional ? '' : '*'}${ p.name }\r(${ p.key })`);
     const dataKeyList = DATA_HEADER_LIST.map(p => p.key);
-    for(const sheetName in data.data){
-      const dataList = data.data[sheetName];
+    for(const sheetName in excelData.data){
+      const dataList = excelData.data[sheetName];
       const sheetData = workbook.addWorksheet(sheetName);
       sheetData.addRow(dataHeaderRow).eachCell((cell: ExcelJS.Cell) => { cell.alignment = { horizontal: 'center', wrapText: true } });
       for(let i = 0; i < DATA_HEADER_LIST.length; i++){
@@ -231,9 +232,9 @@ export class ImageCutterUtil {
               title[colNumber] = match[0] as ConfigSlotHeaderKey;
             }
           }
-        })
+        });
 
-        const imageList = this._getWorksheetImageList(workbook, worksheet);
+        const imageList = ExcelUtil.getWorksheetImageList(workbook, worksheet);
 
         worksheet.eachRow((row: ExcelJS.Row, rowNumber: number) => {
           if(rowNumber > 1){
@@ -274,12 +275,7 @@ export class ImageCutterUtil {
                         break;
                       case 'color':
                         if(cell.fill) {
-                          const argb = (cell.fill as { fgColor: { argb: string } }).fgColor.argb;
-                          const r = parseInt(argb.substring(2, 4), 16);
-                          const g = parseInt(argb.substring(4, 6), 16);
-                          const b = parseInt(argb.substring(6, 8), 16);
-                          const a = parseInt(argb.substring(0, 2), 16);
-                          data.config[key] = `rgba(${ r }, ${ g }, ${ b }, ${ a })`;
+                          data.config[key] = ExcelUtil.argbStringToColor((cell.fill as { fgColor: { argb: string } }).fgColor.argb);
                         }
                         break;
                       case 'font':
@@ -309,13 +305,13 @@ export class ImageCutterUtil {
               title[colNumber] = match[0] as DataKey;
             }
           }
-        })
+        });
 
-        const imageList = this._getWorksheetImageList(workbook, worksheet);
+        const imageList = ExcelUtil.getWorksheetImageList(workbook, worksheet);
 
         worksheet.eachRow((row: ExcelJS.Row, rowNumber: number) => {
           if(rowNumber > 1){
-            const dataLine: Data = {}
+            const dataLine: Data = {};
             for(let i = 0; i < worksheet.getRow(1).cellCount; i++){
               const colNumber = i + 1;
               const cell = row.getCell(colNumber);
@@ -356,17 +352,6 @@ export class ImageCutterUtil {
     return data;
   }
   // ------------------------------------------------------------------------------
-  private static _getWorksheetImageList(workbook: ExcelJS.Workbook, worksheet: ExcelJS.Worksheet) {
-    const output = [];
-    for (const image of worksheet.getImages()) {
-      const media = workbook.model.media.find(m => (m as unknown as { index: number }).index === image.imageId as unknown as number);
-      if(media){
-        output.push({ rowNumber: image.range.tl.nativeRow + 1, colNumber: image.range.tl.nativeCol + 1, buffer: media.buffer });
-      }
-    }
-    return output;
-  }
-  // ------------------------------------------------------------------------------
   //# endregion
   // ------------------------------------------------------------------------------
   //# region OutputLongImage
@@ -384,19 +369,19 @@ export class ImageCutterUtil {
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         if(ctx){
           const config: FullConfig = {
-            themeColor1: data.config.themeColor1 as string || 'rgba(255, 255, 255, 1)',
-            themeColor2: data.config.themeColor2 as string || 'rgba(255, 255, 255, 1)',
-            themeColor3: data.config.themeColor3 as string || 'rgba(0, 0, 0, 1)',
-            themeColor4: data.config.themeColor4 as string || 'rgba(0, 0, 0, 1)',
-            themeColor5: data.config.themeColor5 as string || 'rgba(0, 0, 0, 1)',
-            themeColor6: data.config.themeColor6 as string || 'rgba(255, 255, 255, 1)',
-            themeColor7: data.config.themeColor7 as string || 'rgba(0, 0, 0, 1)',
-            themeColor8: data.config.themeColor8 as string || 'rgba(0, 0, 0, 1)',
-            themeColor9: data.config.themeColor9 as string || 'rgba(29, 105, 180, 1)',
-            themeFont1: data.config.themeFont1 as string || 'Arial',
-            themeFont2: data.config.themeFont2 as string || 'Arial',
-            themeFont3: data.config.themeFont3 as string || 'Arial',
-            themeFont4: data.config.themeFont4 as string || 'Arial',
+            themeColor1: data.config.themeColor1 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor1 as string),
+            themeColor2: data.config.themeColor2 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor2 as string),
+            themeColor3: data.config.themeColor3 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor3 as string),
+            themeColor4: data.config.themeColor4 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor4 as string),
+            themeColor5: data.config.themeColor5 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor5 as string),
+            themeColor6: data.config.themeColor6 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor6 as string),
+            themeColor7: data.config.themeColor7 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor7 as string),
+            themeColor8: data.config.themeColor8 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor8 as string),
+            themeColor9: data.config.themeColor9 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor9 as string),
+            themeFont1: data.config.themeFont1 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont1 as string,
+            themeFont2: data.config.themeFont2 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont2 as string,
+            themeFont3: data.config.themeFont3 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont3 as string,
+            themeFont4: data.config.themeFont4 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont4 as string,
             watermarkImage: data.config.watermarkImage ? await HtmlUtil.arrayBufferToImage(data.config.watermarkImage as ArrayBuffer) : null,
           }
 
@@ -533,10 +518,6 @@ export class ImageCutterUtil {
       if (data.author) infoList.push({ key: '作者', value: `：${ data.author.toString() }` });
       if (data.timestamp) infoList.push({ key: '定稿日期', value: `：${ data.timestamp.toString() }` });
       for (const info of infoList) {
-        // HtmlUtil.drawTextFixWidth(canvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-        // const valueRect = HtmlUtil.measureText(canvas, info.value, 0, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-        // HtmlUtil.drawText(canvas, info.value, width - padding - valueRect.width, drawY, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
-        // drawY += valueRect.height;
         const keyRect = calcHeightOnly ?
           HtmlUtil.measureTextFixWidth(canvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5) :
           HtmlUtil.drawTextFixWidth(canvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5);
@@ -562,7 +543,6 @@ export class ImageCutterUtil {
           ctx.roundRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2, innerPadding);
           ctx.closePath();
           ctx.fill();
-          //ctx.fillRect(padding, drawY, drawWidth + innerPadding * 2, drawHeight + innerPadding * 2);
           ctx.drawImage(image, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
           if (data.watermark && config.watermarkImage) {
             HtmlUtil.repeatImageToCanvas(canvas, config.watermarkImage, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);

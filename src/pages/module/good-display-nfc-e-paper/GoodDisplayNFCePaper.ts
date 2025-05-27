@@ -101,7 +101,7 @@ export default defineComponent({
       discountColor: 'bg-yellow',
 
       priceA: '10',
-      unitA: '张',
+      unitA: '个',
       priceB: '36',
       unitB: '套',
       currency: 'CNY',
