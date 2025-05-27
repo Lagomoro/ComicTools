@@ -32,6 +32,7 @@ module.exports = configure(function (/* ctx */) {
     boot: [
       'i18n',
       'axios',
+      'masonry',
       'mdi-font',
       'font',
       'widgets',

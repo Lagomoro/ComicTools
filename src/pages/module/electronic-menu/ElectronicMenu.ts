@@ -1,11 +1,11 @@
 // ================================================================================
 // * Module dependencies
 // --------------------------------------------------------------------------------
-import {
-  defineComponent,
-  onMounted,
-  onUnmounted,
-} from 'vue';
+import { defineComponent, ref, computed } from 'vue';
+import HtmlUtil from 'src/scripts/util/HtmlUtil';
+import ExcelUtil from 'src/scripts/util/ExcelUtil';
+import ImageCutterUtil from 'src/scripts/module/image-cutter/util/ImageCutterUtil';
+import { ElectronMenuExcel, Screen, SCREEN_LIST, ScreenKey } from 'src/scripts/module/electron-menu/interface/common';
 // ================================================================================
 
 export default defineComponent({
@@ -13,13 +13,7 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     // * Vue
     // ------------------------------------------------------------------------------
-    onMounted(async () => {
 
-    });
-
-    onUnmounted(() => {
-
-    });
     // ------------------------------------------------------------------------------
     // * Interface
     // ------------------------------------------------------------------------------
@@ -31,15 +25,34 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     // * Option
     // ------------------------------------------------------------------------------
-
+    const screenList = ref<Screen[]>(SCREEN_LIST);
     // ------------------------------------------------------------------------------
     // * Component
     // ------------------------------------------------------------------------------
-
+    const elementDivElectronMenu = ref<HTMLDivElement>(undefined as unknown as HTMLDivElement);
     // ------------------------------------------------------------------------------
     // * Parameter
     // ------------------------------------------------------------------------------
+    const isFullScreen = ref<boolean>(document.fullscreenElement !== null);
+    // ------------------------------------------------------------------------------
+    const electronMenuExcel = ref<ElectronMenuExcel>();
+    // ------------------------------------------------------------------------------
+    const screenSelect = ref<ScreenKey>(SCREEN_LIST[0].key);
+    // ------------------------------------------------------------------------------
+    const paddingLeft       = ref<number>(6);
+    const paddingRight      = ref<number>(6);
+    const paddingTop        = ref<number>(6);
+    const paddingBottom     = ref<number>(4);
+    const paddingVertical   = ref<number>(0);
+    const paddingHorizontal = ref<number>(0);
+    // ------------------------------------------------------------------------------
 
+    // ------------------------------------------------------------------------------
+    // * Lifecycle
+    // ------------------------------------------------------------------------------
+    function _refreshElectronMenuExcel(){
+      electronMenuExcel.value = undefined;
+    }
     // ------------------------------------------------------------------------------
     // * Emit
     // ------------------------------------------------------------------------------
@@ -47,9 +60,37 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     // * Function
     // ------------------------------------------------------------------------------
-    //# region
+    //# region FileDrop
     // ------------------------------------------------------------------------------
-
+    async function onExcelConfigDrop(file: File){
+      const arrayBuffer = await HtmlUtil.readBlob(file, 'ArrayBuffer');
+      if (arrayBuffer){
+        const workbook = await ExcelUtil.arrayBufferToExcelJSWorkbook(arrayBuffer);
+        electronMenuExcel.value = ImageCutterUtil.importLongImageExcel(workbook);
+        console.log(electronMenuExcel.value);
+      }
+    }
+    // ------------------------------------------------------------------------------
+    //# endregion
+    // ------------------------------------------------------------------------------
+    //# region Button Events
+    // ------------------------------------------------------------------------------
+    function removeElectronMenuExcel(){
+      _refreshElectronMenuExcel();
+    }
+    // ------------------------------------------------------------------------------
+    //# endregion
+    // ------------------------------------------------------------------------------
+    //# region FullScreen
+    // ------------------------------------------------------------------------------
+    async function requestFullScreen(element: HTMLDivElement) {
+      if(document.fullscreenElement !== null) {
+        await document.exitFullscreen();
+      } else {
+        await element.requestFullscreen();
+      }
+      isFullScreen.value = document.fullscreenElement !== null;
+    }
     // ------------------------------------------------------------------------------
     //# endregion
     // ------------------------------------------------------------------------------
@@ -64,18 +105,37 @@ export default defineComponent({
       // ------------------------------------------------------------------------------
       // * Option
       // ------------------------------------------------------------------------------
+      screenList,
       // ------------------------------------------------------------------------------
       // * Component
       // ------------------------------------------------------------------------------
+      elementDivElectronMenu,
       // ------------------------------------------------------------------------------
       // * Parameter
       // ------------------------------------------------------------------------------
+      isFullScreen,
+      // ------------------------------------------------------------------------------
+      electronMenuExcel,
+      // ------------------------------------------------------------------------------
+      screenSelect,
+      // ------------------------------------------------------------------------------
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      paddingBottom,
+      paddingVertical,
+      paddingHorizontal,
       // ------------------------------------------------------------------------------
       // * Emit
       // ------------------------------------------------------------------------------
       // ------------------------------------------------------------------------------
       // * Function
       // ------------------------------------------------------------------------------
+      onExcelConfigDrop,
+      // ------------------------------------------------------------------------------
+      removeElectronMenuExcel,
+      // ------------------------------------------------------------------------------
+      requestFullScreen,
     }
   }
 });
