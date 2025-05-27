@@ -68,8 +68,8 @@
                                   <div class='m--flex--0-0 row no-wrap q-ml-sm'>
                                     <q-item-label class='m--font--impact' style='font-size: 57px; transform: translate(0, -4px)'>{{ tagInputData.priceA.split('.')[0] }}.</q-item-label>
                                     <div>
-                                      <q-item-label class='m--font--impact' style='font-size: 30px'>{{ tagInputData.priceA.split('.')[1] ? (tagInputData.priceA.split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
-                                      <q-item-label class='text-bold' style='font-size: 20px; margin: 0 0 0 2px; transform: translate(0, -3px)'>/{{ tagInputData.unitA }}</q-item-label>
+                                      <q-item-label class='m--font--impact' style='font-size: 30px; transform: translate(0, -1px)'>{{ tagInputData.priceA.split('.')[1] ? (tagInputData.priceA.split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
+                                      <q-item-label class='text-bold' style='font-size: 20px; margin: 0 0 0 4px; transform: translate(0, -4px)'>/{{ tagInputData.unitA }}</q-item-label>
                                     </div>
                                   </div>
                                   <div class='m--flex--0-0 q-ml-xs q-mr-sm'>
@@ -80,8 +80,8 @@
                                   <div class='m--flex--0-0 row no-wrap q-ml-sm'>
                                     <q-item-label class='m--font--impact' style='font-size: 57px; transform: translate(0, -4px)'>{{ tagInputData.priceB.split('.')[0] }}.</q-item-label>
                                     <div>
-                                      <q-item-label class='m--font--impact' style='font-size: 30px'>{{ tagInputData.priceB.split('.')[1] ? (tagInputData.priceB.split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
-                                      <q-item-label class='text-bold' style='font-size: 20px; margin: 0 0 0 2px; transform: translate(0, -3px)'>/{{ tagInputData.unitB }}</q-item-label>
+                                      <q-item-label class='m--font--impact' style='font-size: 30px; transform: translate(0, -1px)'>{{ tagInputData.priceB.split('.')[1] ? (tagInputData.priceB.split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
+                                      <q-item-label class='text-bold' style='font-size: 20px; margin: 0 0 0 4px; transform: translate(0, -4px)'>/{{ tagInputData.unitB }}</q-item-label>
                                     </div>
                                   </div>
                                   <div class='m--flex--0-0 q-ml-xs q-mr-sm'>
@@ -120,19 +120,19 @@
                         </div>
                         <div class='flex items-center' style='height: 1px'>
                           <div class='fit'>
-                            <div class='fit bg-black'>
-
-                            </div>
+                            <div class='fit bg-black'></div>
                           </div>
                         </div>
                         <div class='flex items-center' style='height: 48px'>
                           <div class='fit'>
                             <div class='fit row no-wrap m--good-display-nfc-e-paper--e-paper-pl'>
-                              <div class='m--flex--0-0 q-ml-sm'>
-                                <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 13px'>{{ tagInputData.logoEnglish }}</q-item-label>
-                                <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 28px; transform: translate(-2px, -4px); margin: 0'>{{ tagInputData.logoChinese }}</q-item-label>
-                              </div>
-                              <div class='m--flex--1-1' style='margin-left: 6px'>
+                              <template v-if='tagInputData.logoChinese'>
+                                <div class='m--flex--0-0 q-ml-sm flex column justify-end no-wrap'>
+                                  <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 13px; transform: translate(0, 1px)'>{{ tagInputData.logoEnglish }}</q-item-label>
+                                  <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 28px; transform: translate(-2px, -3px); margin: 0'>{{ tagInputData.logoChinese }}</q-item-label>
+                                </div>
+                              </template>
+                              <div class='m--flex--1-1 q-ml-sm'>
                                 <div class='flex'>
                                   <div class='flex column items-center'>
                                     <div class='flex row m--flex--1-1' style='height: 34px; padding: 4px 0 2px 0'>
@@ -154,18 +154,24 @@
                               <div class='m--flex--0-0 q-mr-sm'>
                                 <div class='flex items-center full-height'>
                                   <div class='text-bold' style='font-size: 12px; margin-top: 1px'>
-                                    <div class='row no-wrap'>
-                                      <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyA }}</q-item-label>
-                                      <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueA }}</q-item-label>
-                                    </div>
-                                    <div class='row no-wrap'>
-                                      <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyB }}</q-item-label>
-                                      <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueB }}</q-item-label>
-                                    </div>
-                                    <div class='row no-wrap'>
-                                      <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyC }}</q-item-label>
-                                      <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueC }}</q-item-label>
-                                    </div>
+                                    <template v-if='tagInputData.keyA'>
+                                      <div class='row no-wrap'>
+                                        <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyA }}</q-item-label>
+                                        <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueA }}</q-item-label>
+                                      </div>
+                                    </template>
+                                    <template v-if='tagInputData.keyB'>
+                                      <div class='row no-wrap'>
+                                        <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyB }}</q-item-label>
+                                        <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueB }}</q-item-label>
+                                      </div>
+                                    </template>
+                                    <template v-if='tagInputData.keyC'>
+                                      <div class='row no-wrap'>
+                                        <q-item-label class='text-no-wrap' style='width: 34px; text-align: justify; text-align-last: justify'>{{ tagInputData.keyC }}</q-item-label>
+                                        <q-item-label class='text-no-wrap' style='margin: 0'>：{{ tagInputData.valueC }}</q-item-label>
+                                      </div>
+                                    </template>
                                   </div>
                                   <div style='font-size: 11px'>
                                   </div>
@@ -247,15 +253,15 @@
             <div class='full-height q-mx-sm'>
               <q-item-label header>标签信息</q-item-label>
               <div class='q-gutter-y-sm' style='width: 300px'>
-                <div class='flex'>
+                <div class='flex row'>
                   <q-input dense outlined clearable class='col' placeholder='请输入标签' v-model='tagInputData.keyA'></q-input>
                   <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入标签的值' v-model='tagInputData.valueA'></q-input>
                 </div>
-                <div class='flex'>
+                <div class='flex row'>
                   <q-input dense outlined clearable class='col' placeholder='请输入标签' v-model='tagInputData.keyB'></q-input>
                   <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入标签的值' v-model='tagInputData.valueB'></q-input>
                 </div>
-                <div class='flex'>
+                <div class='flex row'>
                   <q-input dense outlined clearable class='col' placeholder='请输入标签' v-model='tagInputData.keyC'></q-input>
                   <q-input dense outlined clearable class='col q-ml-md' placeholder='请输入标签的值' v-model='tagInputData.valueC'></q-input>
                 </div>
