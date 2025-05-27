@@ -5,6 +5,10 @@
   font-style: normal;
 }
 
+.m--font--ys-hello-font-bang-bang-ti {
+  font-family: 'YS-HelloFont-BangBangTi', 'sans-serif' !important;
+}
+
 @font-face {
   font-family: 'Impact';
   src: url('./Impact.otf');
@@ -12,10 +16,81 @@
   font-style: normal;
 }
 
-.m--font--ys-hello-font-bang-bang-ti {
-  font-family: 'YS-HelloFont-BangBangTi', 'sans-serif' !important;
-}
-
 .m--font--impact {
   font-family: 'Impact', 'sans-serif' !important;
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC';
+  src: url('./SourceHanSansSC-ExtraLight.otf');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC';
+  src: url('./SourceHanSansSC-Light.otf');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC';
+  src: url('./SourceHanSansSC-Normal.otf');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC';
+  src: url('./SourceHanSansSC-Regular.otf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC';
+  src: url('./SourceHanSansSC-Medium.otf');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC';
+  src: url('./SourceHanSansSC-Bold.otf');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC';
+  src: url('./SourceHanSansSC-Heavy.otf');
+  font-weight: 700;
+  font-style: normal;
+}
+
+.m--font--source-han-sans-sc {
+  font-family: 'SourceHanSansSC', 'sans-serif' !important;
+
+  &.--extra-light {
+    font-weight: 100;;
+  }
+  &.--light {
+    font-weight: 200;
+  }
+  &.--normal {
+    font-weight: 300;
+  }
+  &.--regular {
+    font-weight: 400;
+  }
+  &.--medium {
+    font-weight: 500;
+  }
+  &.--bold {
+    font-weight: 600;
+  }
+  &.--heavy {
+    font-weight: 700;
+  }
 }
