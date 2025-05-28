@@ -1,31 +1,21 @@
 // ================================================================================
 // * Module dependencies
 // --------------------------------------------------------------------------------
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 // --------------------------------------------------------------------------------
-import { Data, Config } from 'src/scripts/module/electron-menu/interface/common';
-// --------------------------------------------------------------------------------
-import ElectronicMenuTitlePart from 'pages/module/electronic-menu/part/ElectronicMenuTitlePart.vue';
-import ElectronicMenuDescriptionPart from 'pages/module/electronic-menu/part/ElectronicMenuDescriptionPart.vue';
-import ElectronicMenuInfoPart from 'pages/module/electronic-menu/part/ElectronicMenuInfoPart.vue';
-import ElectronicMenuHintPart from 'pages/module/electronic-menu/part/ElectronicMenuHintPart.vue';
+import { Config } from 'src/scripts/module/electron-menu/interface/common';
 // ================================================================================
 
 export default defineComponent({
-  components: {
-    ElectronicMenuTitlePart,
-    ElectronicMenuDescriptionPart,
-    ElectronicMenuInfoPart,
-    ElectronicMenuHintPart,
-  },
   props: {
-    config:      { type: Object as PropType<Config>, required: true },
-    data:        { type: Object as PropType<Data>,   required: true },
-    showInfo:    { type: Boolean,                    required: true },
-    showHint:    { type: Boolean,                    required: true },
-    width:       { type: String,                     required: true },
+    config:   { type: Object as PropType<Config>, required: true },
+    name:     { type: String,                     required: true },
+    category: { type: String,                     required: false },
+    price:    { type: Number,                     required: true },
+    unit:     { type: String,                     required: true },
+    currency: { type: String,                     required: true },
   },
-  setup() {
+  setup(props) {
     // ------------------------------------------------------------------------------
     // * Vue
     // ------------------------------------------------------------------------------
@@ -37,7 +27,8 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     // * Constant
     // ------------------------------------------------------------------------------
-
+    const priceInt   = computed<string>(() => props.price.toString().split('.')[0]);
+    const priceFloat = computed<string>(() => props.price.toString().split('.')[1] ? (props.price.toString().split('.')[1] + '00').substring(0, 2) : '00');
     // ------------------------------------------------------------------------------
     // * Option
     // ------------------------------------------------------------------------------
@@ -76,6 +67,8 @@ export default defineComponent({
       // ------------------------------------------------------------------------------
       // * Option
       // ------------------------------------------------------------------------------
+      priceInt,
+      priceFloat,
       // ------------------------------------------------------------------------------
       // * Component
       // ------------------------------------------------------------------------------

@@ -5,15 +5,27 @@ import JSZip from 'jszip';
 // --------------------------------------------------------------------------------
 import ExcelJS from 'exceljs';
 // --------------------------------------------------------------------------------
-import {
-  CONFIG_SLOT_HEADER_LIST,
-  CONFIG_SLOT_LIST, ConfigSlot, ConfigSlotHeaderKey,
-  DATA_HEADER_LIST, DataKey, DEFAULT_LONG_IMAGE_EXCEL,
-  LongImageExcel, DEFAULT_SLICE, CalcBaseImageOption, OutputBaseImageOption, ConfigKey, Data, FullConfig
-} from 'src/scripts/module/image-cutter/interface/common';
 import ObjectUtil from 'src/scripts/util/ObjectUtil';
 import HtmlUtil from 'src/scripts/util/HtmlUtil';
 import ExcelUtil from 'src/scripts/util/ExcelUtil';
+// --------------------------------------------------------------------------------
+import {
+  DEFAULT_SLICE,
+  CalcBaseImageOption,
+  OutputBaseImageOption,
+  ConfigSlotHeaderKey,
+  CONFIG_SLOT_HEADER_RECORD,
+  ConfigSlotKey,
+  ConfigSlot,
+  CONFIG_SLOT_RECORD,
+  Config,
+  ConfigLine,
+  DataHeaderKey,
+  DATA_HEADER_RECORD,
+  Data,
+  DataLine,
+  LongImageExcel,
+} from 'src/scripts/module/image-cutter/interface/common';
 // ================================================================================
 
 // ================================================================================
@@ -146,6 +158,88 @@ export class ImageCutterUtil {
   // ------------------------------------------------------------------------------
   //# region LongImageExcel
   // ------------------------------------------------------------------------------
+  public static getConfigFromConfigLine(configLine: ConfigLine): Config {
+    const config = this.getDefaultConfig();
+    config.themeColor1    = configLine.themeColor1 as string ?? config.themeColor1;
+    config.themeColor2    = configLine.themeColor2 as string ?? config.themeColor2;
+    config.themeColor3    = configLine.themeColor3 as string ?? config.themeColor3;
+    config.themeColor4    = configLine.themeColor4 as string ?? config.themeColor4;
+    config.themeColor5    = configLine.themeColor5 as string ?? config.themeColor5;
+    config.themeColor6    = configLine.themeColor6 as string ?? config.themeColor6;
+    config.themeColor7    = configLine.themeColor7 as string ?? config.themeColor7;
+    config.themeColor8    = configLine.themeColor8 as string ?? config.themeColor8;
+    config.themeColor9    = configLine.themeColor9 as string ?? config.themeColor9;
+    config.themeFont1     = configLine.themeFont1 as string ?? config.themeFont1;
+    config.themeFont2     = configLine.themeFont2 as string ?? config.themeFont2;
+    config.themeFont3     = configLine.themeFont3 as string ?? config.themeFont3;
+    config.themeFont4     = configLine.themeFont4 as string ?? config.themeFont4;
+    config.watermarkImage = configLine.watermarkImage as ArrayBuffer ?? config.watermarkImage;
+
+    config.watermarkImageSrc = config.watermarkImage ? HtmlUtil.arrayBufferToImageSrc(config.watermarkImage) : '';
+    return config;
+  }
+
+  public static getDefaultConfig(): Config {
+    const config: Config = {} as Config;
+    for (const key in CONFIG_SLOT_RECORD) {
+      config[key as ConfigSlotKey] = CONFIG_SLOT_RECORD[key as ConfigSlotKey].defaultValue as never;
+    }
+    return config;
+  }
+  // ------------------------------------------------------------------------------
+  public static getDataFromDataLine(dataLine: DataLine): Data {
+    const data = this.getDefaultData();
+    data.id          = dataLine.id as string ?? data.id;
+    data.name        = dataLine.name as string ?? data.name;
+    data.image       = dataLine.image as ArrayBuffer ?? data.image;
+    data.watermark   = dataLine.watermark as boolean ?? data.watermark;
+    data.category    = dataLine.category as string ?? data.category;
+    data.width       = dataLine.width as number ?? data.width;
+    data.group       = dataLine.group as string ?? data.group;
+    data.price       = dataLine.price as number ?? data.price;
+    data.unit        = dataLine.unit as string ?? data.unit;
+    data.currency    = dataLine.currency as string ?? data.currency;
+    data.description = dataLine.description as string ?? data.description;
+    data.size        = dataLine.size as string ?? data.size;
+    data.material    = dataLine.material as string ?? data.material;
+    data.manufacture = dataLine.manufacture as string ?? data.manufacture;
+    data.producer    = dataLine.producer as string ?? data.producer;
+    data.author      = dataLine.author as string ?? data.author;
+    data.timestamp   = dataLine.timestamp as string ?? data.timestamp;
+    data.storage     = dataLine.storage as number ?? data.storage;
+    data.titleBefore = dataLine.titleBefore as string ?? data.titleBefore;
+    data.textBefore  = dataLine.textBefore as string ?? data.textBefore;
+    data.titleAfter  = dataLine.titleAfter as string ?? data.titleAfter;
+    data.textAfter   = dataLine.textAfter as string ?? data.textAfter;
+
+    data.imageSrc = data.image ? HtmlUtil.arrayBufferToImageSrc(data.image) : '';
+    return data;
+  }
+
+  public static getDefaultData(): Data {
+    const data: Data = {} as Data;
+    for (const key in DATA_HEADER_RECORD) {
+       data[key as DataHeaderKey] = DATA_HEADER_RECORD[key as DataHeaderKey].defaultValue as never;
+    }
+    return data;
+  }
+  // ------------------------------------------------------------------------------
+  public static getDefaultLongImageExcel(): LongImageExcel {
+    return { config: this.getDefaultConfig(), data: {} };
+  }
+
+  public static getExampleLongImageExcel(): LongImageExcel {
+    const config: Config = {} as Config;
+    for (const key in CONFIG_SLOT_RECORD) {
+      config[key as ConfigSlotKey] = CONFIG_SLOT_RECORD[key as ConfigSlotKey].sampleValue as never;
+    }
+    const data: Data = {} as Data;
+    for (const key in DATA_HEADER_RECORD) {
+      data[key as DataHeaderKey] = DATA_HEADER_RECORD[key as DataHeaderKey].sampleValue as never;
+    }
+    return { config, data: { 7: [data], 8: [data], 9: [data] } };
+  }
+  // ------------------------------------------------------------------------------
   public static exportLongImageExcel(excelData: LongImageExcel): ExcelJS.Workbook {
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'Lagomoro';
@@ -175,43 +269,46 @@ export class ImageCutterUtil {
       sheetReadme.addRow([readme[i]]);
     }
 
-    const configSlotHeaderRow = CONFIG_SLOT_HEADER_LIST.map(p => `${ p.name }\r(${ p.key })`);
-    const configSlotKeyList = CONFIG_SLOT_HEADER_LIST.map(p => p.key);
+    const configSlotHeaderRow = ObjectUtil.mapArray(CONFIG_SLOT_HEADER_RECORD, (value, key) => `${ value.name }\r(${ key })`);
+    const configSlotHeaderKeyList = ObjectUtil.mapArray(CONFIG_SLOT_HEADER_RECORD, (value, key) => key);
     const sheetConfig = workbook.addWorksheet('Config');
     sheetConfig.addRow(configSlotHeaderRow).eachCell((cell: ExcelJS.Cell) => { cell.alignment = { horizontal: 'center', wrapText: true } });
-    for (let i = 0; i < CONFIG_SLOT_HEADER_LIST.length; i++) {
-      const configHeader = CONFIG_SLOT_HEADER_LIST[i];
-      sheetConfig.getColumn(i + 1).width = configHeader.width;
+    let configIndex = 0;
+    for (const key in CONFIG_SLOT_HEADER_RECORD){
+      const configHeader = CONFIG_SLOT_HEADER_RECORD[key as ConfigSlotHeaderKey];
+      sheetConfig.getColumn(configIndex + 1).width = configHeader.width;
+      configIndex ++;
     }
-    for(const configSlot of CONFIG_SLOT_LIST){
-      if(configSlot.key in excelData.config){
+    for (const key in CONFIG_SLOT_RECORD){
+      if(key in excelData.config){
+        const configSlot = CONFIG_SLOT_RECORD[key as ConfigSlotKey];
         if(configSlot.type === 'color') {
-          const row = sheetConfig.addRow(configSlotKeyList.map(p => p === 'value' ? '' : configSlot[p as keyof ConfigSlot]));
+          const row = sheetConfig.addRow(configSlotHeaderKeyList.map(p => p === 'value' ? '' : configSlot[p as keyof ConfigSlot]));
           row.height = 21;
-          row.getCell(configSlotKeyList.indexOf('value') + 1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: configSlot.defaultValue as string }}
-        } else if(configSlot.type === 'image') {
-          sheetConfig.addRow(configSlotKeyList.map(p => p === 'value' ? '' : configSlot[p as keyof ConfigSlot])).height = 21;
+          row.getCell(configSlotHeaderKeyList.indexOf('value') + 1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: excelData.config[key as ConfigSlotKey] as string }}
         } else {
-          sheetConfig.addRow(configSlotKeyList.map(p => p === 'value' ? configSlot.defaultValue : configSlot[p as keyof ConfigSlot])).height = 21;
+          sheetConfig.addRow(configSlotHeaderKeyList.map(p => p === 'value' ? excelData.config[key as ConfigSlotKey] : configSlot[p as keyof ConfigSlot])).height = 21;
         }
       }
     }
 
-    const dataHeaderRow = DATA_HEADER_LIST.map(p => `${ p.optional ? '' : '*'}${ p.name }\r(${ p.key })`);
-    const dataKeyList = DATA_HEADER_LIST.map(p => p.key);
+    const dataHeaderRow = ObjectUtil.mapArray(DATA_HEADER_RECORD, (value, key) => `${ value.optional ? '' : '*'}${ value.name }\r(${ key })`);
+    const dataHeaderKeyList = ObjectUtil.mapArray(DATA_HEADER_RECORD, (value, key) => key);
     for(const sheetName in excelData.data){
       const dataList = excelData.data[sheetName];
       const sheetData = workbook.addWorksheet(sheetName);
       sheetData.addRow(dataHeaderRow).eachCell((cell: ExcelJS.Cell) => { cell.alignment = { horizontal: 'center', wrapText: true } });
-      for(let i = 0; i < DATA_HEADER_LIST.length; i++){
-        const dataHeader = DATA_HEADER_LIST[i];
-        sheetData.getColumn(i + 1).width = dataHeader.width;
-        sheetData.getCell(1, i + 1).note = `${ dataHeader.description }\r<${ dataHeader.type }>\r${ dataHeader.optional ? '选填' : '*必填'}`;
+      let dataIndex = 0;
+      for (const key in DATA_HEADER_RECORD){
+        const dataHeader = DATA_HEADER_RECORD[key as DataHeaderKey];
+        sheetData.getColumn(dataIndex + 1).width = dataHeader.width;
+        sheetData.getCell(1, dataIndex + 1).note = `${ dataHeader.description }\r<${ dataHeader.type }>\r${ dataHeader.optional ? '选填' : '*必填'}`;
+        dataIndex++;
       }
       for(const data of dataList){
         const row = [];
         for(const key in data){
-          row[dataKeyList.indexOf(key as DataKey)] = data[key as DataKey];
+          row[dataHeaderKeyList.indexOf(key as DataHeaderKey)] = data[key as DataHeaderKey];
         }
         sheetData.addRow(row).height = 21;
       }
@@ -221,7 +318,7 @@ export class ImageCutterUtil {
   }
 
   public static importLongImageExcel(workbook: ExcelJS.Workbook): LongImageExcel {
-    const data = ObjectUtil.deepCopy(DEFAULT_LONG_IMAGE_EXCEL);
+    const data = this.getDefaultLongImageExcel();
     workbook.eachSheet((worksheet: ExcelJS.Worksheet) => {
       if(worksheet.name === 'Config'){
         const title: Record<number, ConfigSlotHeaderKey> = {};
@@ -236,16 +333,17 @@ export class ImageCutterUtil {
 
         const imageList = ExcelUtil.getWorksheetImageList(workbook, worksheet);
 
+        const configLine: ConfigLine = {};
         worksheet.eachRow((row: ExcelJS.Row, rowNumber: number) => {
           if(rowNumber > 1){
-            let key: ConfigKey = undefined as unknown as ConfigKey;
+            let key: ConfigSlotKey = undefined as unknown as ConfigSlotKey;
             row.eachCell((cell: ExcelJS.Cell, colNumber: number) => {
               if (title[colNumber] === 'key' && cell.text) {
-                key = cell.text as ConfigKey;
+                key = cell.text as ConfigSlotKey;
               }
             });
             if (key) {
-              const configSlotFilter = CONFIG_SLOT_LIST.filter(p => p.key === key);
+              const configSlotFilter = Object.values(ObjectUtil.filter(CONFIG_SLOT_RECORD, (value, _key) => _key === key));
               if(configSlotFilter.length === 1){
                 for(let i = 0; i < worksheet.getRow(1).cellCount; i++){
                   const colNumber = i + 1;
@@ -254,33 +352,39 @@ export class ImageCutterUtil {
                     switch (configSlotFilter[0].type) {
                       case 'string':
                         if(typeof cell.value === 'string') {
-                          data.config[key] = cell.value as string;
+                          configLine[key] = cell.value as string;
+                        } else {
+                          configLine[key] = String(cell.value ?? '');
                         }
                         break;
                       case 'number':
                         if(typeof cell.value === 'number') {
-                          data.config[key] = cell.value as number;
+                          configLine[key] = cell.value as number;
+                        } else {
+                          configLine[key] = Number(cell.value ?? 0);
                         }
                         break;
                       case 'boolean':
                         if(typeof cell.value === 'boolean') {
-                          data.config[key] = cell.value as boolean;
+                          configLine[key] = cell.value as boolean;
+                        } else {
+                          configLine[key] = Boolean(cell.value ?? false);
                         }
                         break;
                       case 'image':
                         const image = imageList.filter(p => p.colNumber === colNumber && p.rowNumber == rowNumber);
                         if(image.length > 0){
-                          data.config[key] = image[0].buffer;
+                          configLine[key] = image[0].buffer;
                         }
                         break;
                       case 'color':
                         if(cell.fill) {
-                          data.config[key] = ExcelUtil.argbStringToColor((cell.fill as { fgColor: { argb: string } }).fgColor.argb);
+                          configLine[key] = ExcelUtil.argbStringToColor((cell.fill as { fgColor: { argb: string } }).fgColor.argb);
                         }
                         break;
                       case 'font':
                         if(typeof cell.value === 'string') {
-                          data.config[key] = cell.value as string;
+                          configLine[key] = cell.value as string;
                         }
                         break;
                     }
@@ -290,6 +394,7 @@ export class ImageCutterUtil {
             }
           }
         });
+        data.config = this.getConfigFromConfigLine(configLine);
       } else {
         const index = parseInt(worksheet.name);
         if (isNaN(index) || index < 1 || index > 9) {
@@ -297,12 +402,12 @@ export class ImageCutterUtil {
         }
         data.data[index] = [];
 
-        const title: Record<number, DataKey> = {};
+        const title: Record<number, DataHeaderKey> = {};
         worksheet.getRow(1).eachCell((cell: ExcelJS.Cell, colNumber: number) => {
           if(cell.type === ExcelJS.ValueType.String && cell.text){
             const match = cell.text.match(/(?<=\()(.+?)(?=\))/g);
             if(match && match.length === 1){
-              title[colNumber] = match[0] as DataKey;
+              title[colNumber] = match[0] as DataHeaderKey;
             }
           }
         });
@@ -311,27 +416,33 @@ export class ImageCutterUtil {
 
         worksheet.eachRow((row: ExcelJS.Row, rowNumber: number) => {
           if(rowNumber > 1){
-            const dataLine: Data = {};
+            const dataLine: DataLine = {};
             for(let i = 0; i < worksheet.getRow(1).cellCount; i++){
               const colNumber = i + 1;
               const cell = row.getCell(colNumber);
               const key = title[colNumber]
-              const dataHeaderFilter = DATA_HEADER_LIST.filter(p => p.key === key);
+              const dataHeaderFilter = Object.values(ObjectUtil.filter(DATA_HEADER_RECORD, (value, _key) => _key === key));
               if(dataHeaderFilter.length === 1) {
                 switch (dataHeaderFilter[0].type) {
                   case 'string':
                     if (typeof cell.value === 'string') {
                       dataLine[key] = cell.value as string;
+                    } else {
+                      dataLine[key] = String(cell.value ?? '');
                     }
                     break;
                   case 'number':
                     if (typeof cell.value === 'number') {
                       dataLine[key] = cell.value as number;
+                    } else {
+                      dataLine[key] = Number(cell.value ?? 0);
                     }
                     break;
                   case 'boolean':
                     if (typeof cell.value === 'boolean') {
                       dataLine[key] = cell.value as boolean;
+                    } else {
+                      dataLine[key] = Boolean(cell.value ?? false);
                     }
                     break;
                   case 'image':
@@ -343,7 +454,7 @@ export class ImageCutterUtil {
                 }
               }
             }
-            data.data[index].push(dataLine);
+            data.data[index].push(this.getDataFromDataLine(dataLine));
           }
         });
       }
@@ -368,23 +479,7 @@ export class ImageCutterUtil {
         canvas.height = originImage.height;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         if(ctx){
-          const config: FullConfig = {
-            themeColor1: data.config.themeColor1 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor1 as string),
-            themeColor2: data.config.themeColor2 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor2 as string),
-            themeColor3: data.config.themeColor3 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor3 as string),
-            themeColor4: data.config.themeColor4 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor4 as string),
-            themeColor5: data.config.themeColor5 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor5 as string),
-            themeColor6: data.config.themeColor6 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor6 as string),
-            themeColor7: data.config.themeColor7 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor7 as string),
-            themeColor8: data.config.themeColor8 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor8 as string),
-            themeColor9: data.config.themeColor9 as string || ExcelUtil.argbStringToColor(DEFAULT_LONG_IMAGE_EXCEL.config.themeColor9 as string),
-            themeFont1: data.config.themeFont1 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont1 as string,
-            themeFont2: data.config.themeFont2 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont2 as string,
-            themeFont3: data.config.themeFont3 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont3 as string,
-            themeFont4: data.config.themeFont4 as string || DEFAULT_LONG_IMAGE_EXCEL.config.themeFont4 as string,
-            watermarkImage: data.config.watermarkImage ? await HtmlUtil.arrayBufferToImage(data.config.watermarkImage as ArrayBuffer) : null,
-          }
-
+          const config = data.config;
           ctx.save();
           ctx.drawImage(originImage, 0, 0);
           for(let i = 0; i < dataSheet.length;i ++){
@@ -419,7 +514,7 @@ export class ImageCutterUtil {
     return await zip.generateAsync({ type: 'blob' });
   };
   // ------------------------------------------------------------------------------
-  private static async _drawLongImage(canvas: HTMLCanvasElement, config: FullConfig, data: Data, padding: number, baseFontSize: number, last: boolean): Promise<number> {
+  private static async _drawLongImage(canvas: HTMLCanvasElement, config: Config, data: Data, padding: number, baseFontSize: number, last: boolean): Promise<number> {
     const width = canvas.width;
     const height = canvas.height;
     const calcHeightOnly = height === 0;
@@ -448,13 +543,14 @@ export class ImageCutterUtil {
           if (data.category) {
             HtmlUtil.drawText(canvas, data.category.toString(), titleRect.x + titleRect.width + titleFontSize * 0.6, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
           }
-          if (data.price !== undefined && data.price !== null) {
-            if (data.price <= 0) {
+          if (data.price !== undefined && data.price !== null && data.currency) {
+            if (data.price === 0) {
               const tempPriceRect = HtmlUtil.measureText(canvas, '无料', 0, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
               HtmlUtil.drawText(canvas, '无料', width - padding - tempPriceRect.width, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
-            } else {
-              const tempUnitRect = HtmlUtil.measureText(canvas, 'CNY', 0, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
-              const unitRect = HtmlUtil.drawText(canvas, 'CNY', width - padding - tempUnitRect.width, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
+            }
+            if (data.price > 0) {
+              const tempUnitRect = HtmlUtil.measureText(canvas, data.currency, 0, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
+              const unitRect = HtmlUtil.drawText(canvas, data.currency, width - padding - tempUnitRect.width, drawY, `${titleFontSize * 0.6}px ${config.themeFont1}`, config.themeColor3);
               const priceRect = HtmlUtil.measureText(canvas, data.price.toString(), 0, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
               HtmlUtil.drawText(canvas, data.price.toString(), width - padding - unitRect.width - priceRect.width, drawY, `${titleFontSize}px ${config.themeFont1}`, config.themeColor3);
             }
@@ -511,12 +607,12 @@ export class ImageCutterUtil {
 
       const infoFontSize = baseFontSize * 0.8;
       const infoList = [];
-      if (data.size) infoList.push({ key: '规格', value: `：${ data.size.toString() }` });
-      if (data.material) infoList.push({ key: '材质', value: `：${ data.material.toString() }` });
+      if (data.size)        infoList.push({ key: '规格', value: `：${ data.size.toString() }` });
+      if (data.material)    infoList.push({ key: '材质', value: `：${ data.material.toString() }` });
       if (data.manufacture) infoList.push({ key: '工艺', value: `：${ data.manufacture.toString() }` });
-      if (data.producer) infoList.push({ key: '制造设计', value: `：${ data.producer.toString() }` });
-      if (data.author) infoList.push({ key: '作者', value: `：${ data.author.toString() }` });
-      if (data.timestamp) infoList.push({ key: '定稿日期', value: `：${ data.timestamp.toString() }` });
+      if (data.producer)    infoList.push({ key: '制造设计', value: `：${ data.producer.toString() }` });
+      if (data.author)      infoList.push({ key: '作者', value: `：${ data.author.toString() }` });
+      if (data.timestamp)   infoList.push({ key: '定稿日期', value: `：${ data.timestamp.toString() }` });
       for (const info of infoList) {
         const keyRect = calcHeightOnly ?
           HtmlUtil.measureTextFixWidth(canvas, info.key, padding, drawY, infoFontSize * 4, `${ infoFontSize }px ${ config.themeFont3 }`, config.themeColor5) :
@@ -544,8 +640,8 @@ export class ImageCutterUtil {
           ctx.closePath();
           ctx.fill();
           ctx.drawImage(image, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
-          if (data.watermark && config.watermarkImage) {
-            HtmlUtil.repeatImageToCanvas(canvas, config.watermarkImage, padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
+          if (data.watermark && config.watermarkImageSrc) {
+            HtmlUtil.repeatImageToCanvas(canvas, await HtmlUtil.imageSrcToImage(config.watermarkImageSrc), padding + innerPadding, drawY + innerPadding, drawWidth, drawHeight);
           }
           ctx.restore();
         }

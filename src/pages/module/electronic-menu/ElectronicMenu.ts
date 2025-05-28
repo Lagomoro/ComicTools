@@ -6,7 +6,6 @@ import HtmlUtil from 'src/scripts/util/HtmlUtil';
 import ExcelUtil from 'src/scripts/util/ExcelUtil';
 import {
   ElectronMenuExcel,
-  EXAMPLE_ELECTRON_MENU_EXCEL,
   Screen,
   SCREEN_LIST,
   ScreenKey,
@@ -17,12 +16,22 @@ import ElectronMenuUtil from 'src/scripts/module/electron-menu/util/ElectronMenu
 // --------------------------------------------------------------------------------
 import ElectronicMenuGridItem from 'pages/module/electronic-menu/item/ElectronicMenuGridItem.vue';
 // --------------------------------------------------------------------------------
+import ElectronicMenuTitlePart from 'pages/module/electronic-menu/part/ElectronicMenuTitlePart.vue';
+import ElectronicMenuDescriptionPart from 'pages/module/electronic-menu/part/ElectronicMenuDescriptionPart.vue';
+import ElectronicMenuInfoPart from 'pages/module/electronic-menu/part/ElectronicMenuInfoPart.vue';
+import ElectronicMenuHintPart from 'pages/module/electronic-menu/part/ElectronicMenuHintPart.vue';
+// --------------------------------------------------------------------------------
 import sellOut from 'src/assets/image/sell-out.png';
 // ================================================================================
 
 export default defineComponent({
   components: {
-    ElectronicMenuGridItem
+    ElectronicMenuGridItem,
+
+    ElectronicMenuTitlePart,
+    ElectronicMenuDescriptionPart,
+    ElectronicMenuInfoPart,
+    ElectronicMenuHintPart,
   },
   setup(){
     // ------------------------------------------------------------------------------
@@ -45,8 +54,8 @@ export default defineComponent({
       paddingVertical: number;
       paddingHorizontal: number;
 
-      showInfoFirst: boolean;
-      showInfoInner: boolean;
+      showInfoGroup: boolean;
+      showInfoData: boolean;
       showHintGroup: boolean;
       showHintData: boolean;
     }
@@ -80,16 +89,15 @@ export default defineComponent({
       paddingVertical: 0,
       paddingHorizontal: 0,
 
-      showInfoFirst: true,
-      showInfoInner: false,
-      showHintGroup: true,
+      showInfoGroup: true,
+      showInfoData: true,
+      showHintGroup: false,
       showHintData: false,
     })
     // ------------------------------------------------------------------------------
     const isFullScreen = ref<boolean>(document.fullscreenElement !== null);
     // ------------------------------------------------------------------------------
     const electronMenuExcel = ref<ElectronMenuExcel>();
-    const imageRecord = ref<Record<number, string>>({});
     // ------------------------------------------------------------------------------
     const screenSelect = ref<ScreenKey>(SCREEN_LIST[0].key);
     // ------------------------------------------------------------------------------
@@ -101,8 +109,11 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     function _refreshElectronMenuExcel(){
       electronMenuExcel.value = undefined;
-      imageRecord.value = {};
     }
+    // ------------------------------------------------------------------------------
+    // * Listener
+    // ------------------------------------------------------------------------------
+
     // ------------------------------------------------------------------------------
     // * Emit
     // ------------------------------------------------------------------------------
@@ -118,14 +129,11 @@ export default defineComponent({
         const workbook = await ExcelUtil.arrayBufferToExcelJSWorkbook(arrayBuffer);
         electronMenuExcel.value = ElectronMenuUtil.importElectronMenuExcel(workbook);
         console.log(electronMenuExcel.value);
-        imageRecord.value = {};
         const sellOutImage = await HtmlUtil.imageSrcToImage(sellOut);
         for(const data of electronMenuExcel.value.data){
           if(data.image) {
-            if(data.storage && data.storage > 0){
-              imageRecord.value[data.id as number] = ElectronMenuUtil.getNormalImageSrc(data.image as ArrayBuffer);
-            } else {
-              imageRecord.value[data.id as number] = await ElectronMenuUtil.getSelloutImageSrc(data.image as ArrayBuffer, sellOutImage);
+            if(data.storage === 0){
+              data.imageSrc = await ElectronMenuUtil.getSelloutImageSrc(data.image as ArrayBuffer, sellOutImage);
             }
           }
         }
@@ -159,7 +167,7 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     async function exportDefaultExcel () {
       outputLoading.value = true;
-      const workbook = ElectronMenuUtil.exportElectronMenuExcel(EXAMPLE_ELECTRON_MENU_EXCEL);
+      const workbook = ElectronMenuUtil.exportElectronMenuExcel(ElectronMenuUtil.getExampleElectronMenuExcel());
       const excelBlob = await ExcelUtil.excelJSWorkbookToBlob(workbook);
       HtmlUtil.downloadBlob('example.xlsx', excelBlob);
       outputLoading.value = false;
@@ -215,7 +223,6 @@ export default defineComponent({
       isFullScreen,
       // ------------------------------------------------------------------------------
       electronMenuExcel,
-      imageRecord,
       // ------------------------------------------------------------------------------
       screenSelect,
       // ------------------------------------------------------------------------------

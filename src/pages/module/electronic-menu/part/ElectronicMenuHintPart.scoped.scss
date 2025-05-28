@@ -1,0 +1,16 @@
+.m--electron-menu--scroll-area--part--hint--card {
+  border: 0.1vw solid black;
+  border-radius: 0.6vw;
+
+  & > .--title {
+    border-radius: 0.6vw 0.6vw 0 0;
+
+    padding: 0.2vw 0.3vw 0.4vw 0.3vw;
+
+    color: white;
+    background-color: black;
+  }
+  & > .--content {
+    padding: 0.6vw;
+  }
+}

@@ -19,27 +19,3 @@
     background: linear-gradient(rgba(255, 255, 255, 0), white);
   }
 }
-
-.m--electron-menu--scroll-area--grid-item--warning-card {
-  border: 0.1vw solid black;
-  border-radius: 0.6vw;
-
-  & > .--title {
-    border-radius: 0.6vw 0.6vw 0 0;
-
-    padding: 0.2vw 0.3vw 0.4vw 0.3vw;
-
-    color: white;
-    background-color: black;
-  }
-  & > .--content {
-    padding: 0.6vw;
-  }
-}
-
-.m--electron-menu--scroll-area--grid-item--justify-info {
-  width: 4vw;
-  min-width: 4vw;
-  text-align: justify;
-  text-align-last: justify;
-}

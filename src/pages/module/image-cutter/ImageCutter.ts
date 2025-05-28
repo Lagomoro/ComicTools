@@ -8,7 +8,7 @@ import {
   RatioKey, ModeKey, OutputKey,
   Ratio, Mode, Output,
   RATIO_LIST, RATIO_RECORD, MODE_LIST, OUTPUT_LIST,
-  EXAMPLE_LONG_IMAGE_EXCEL, LongImageExcel
+  LongImageExcel
 } from 'src/scripts/module/image-cutter/interface/common';
 import HtmlUtil from 'src/scripts/util/HtmlUtil';
 import ExcelUtil from 'src/scripts/util/ExcelUtil';
@@ -79,6 +79,10 @@ export default defineComponent({
     function _refreshLongImageExcel(){
       longImageExcel.value = undefined;
     }
+    // ------------------------------------------------------------------------------
+    // * Listener
+    // ------------------------------------------------------------------------------
+
     // ------------------------------------------------------------------------------
     // * Emit
     // ------------------------------------------------------------------------------
@@ -212,7 +216,7 @@ export default defineComponent({
     // ------------------------------------------------------------------------------
     async function exportDefaultExcel () {
       outputLoading.value = true;
-      const workbook = ImageCutterUtil.exportLongImageExcel(EXAMPLE_LONG_IMAGE_EXCEL);
+      const workbook = ImageCutterUtil.exportLongImageExcel(ImageCutterUtil.getExampleLongImageExcel());
       const excelBlob = await ExcelUtil.excelJSWorkbookToBlob(workbook);
       HtmlUtil.downloadBlob('example.xlsx', excelBlob);
       outputLoading.value = false;

@@ -31,7 +31,7 @@
                     <div class='row q-px-md'>
                       <template v-for='index in 9' :key='index'>
                         <div class='m--border--solid--sm' style='padding: 2px'>
-                          <div class='m--border--solid--sm' :style='`padding: 11.56px;background-color: ` + electronMenuExcel.config[`themeColor` + index]'></div>
+                          <div class='m--border--solid--sm' :style='`padding: 11.56px;background-color: ` + electronMenuExcel.config[`themeColor${ index }`]'></div>
                         </div>
                       </template>
                     </div>
@@ -39,7 +39,7 @@
                     <div class='q-px-md'>
                       <template v-for='index in 4' :key='index'>
                         <div class='m--border--solid--sm q-pa-xs'>
-                          <q-item-label :style='`font-family: ` + electronMenuExcel.config[`themeFont` + index]'>{{ electronMenuExcel.config[`themeFont` + index] }}</q-item-label>
+                          <q-item-label :style='`font-family: ` + electronMenuExcel.config[`themeFont${ index }`]'>{{ electronMenuExcel.config[`themeFont${ index }`] }}</q-item-label>
                         </div>
                       </template>
                     </div>
@@ -89,11 +89,11 @@
                   </div>
                   <q-separator vertical></q-separator>
                   <div class='m--flex--1-1 flex flex-center'>
-                    <q-checkbox dense label='首层' v-model='menuInputData.showInfoFirst'></q-checkbox>
+                    <q-checkbox dense label='分组' v-model='menuInputData.showInfoGroup'></q-checkbox>
                   </div>
                   <q-separator vertical></q-separator>
                   <div class='m--flex--1-1 flex flex-center'>
-                    <q-checkbox dense label='组内' v-model='menuInputData.showInfoInner'></q-checkbox>
+                    <q-checkbox dense label='单品' v-model='menuInputData.showInfoData'></q-checkbox>
                   </div>
                 </div>
                 <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
@@ -229,138 +229,26 @@
                             <q-btn unelevated square no-caps color='white' padding='none' v-masonry-tile class='m--electron-menu--scroll-area--grid-item' :style='`width: ${ 25 * groupData.width }%`' @click.prevent.stop='setGroupDialog(groupData)'>
                               <div class='fit text-black text-left'>
                                 <div style='padding: 0.5vw'>
-                                  <div class='flex row no-wrap'>
-                                    <div>
-                                      <div class='flex row no-wrap items-end'>
-                                        <div :style='`width: 0.5vw; height: 1.2vw; margin-bottom: 0.2vw; background-color: ${ electronMenuExcel.config.themeColor9 }`'></div>
-                                        <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 1.6vw; margin-left: 0.4vw'>{{ groupData.name }}</q-item-label>
-                                      </div>
-                                      <template v-if='groupData.category'>
-                                        <div style='margin-top: 0.4vw'>
-                                          <q-item-label class='m--font--source-han-sans-sc --bold text-no-wrap' style='font-size: 1.2vw; margin-left: 1vw'>{{ groupData.category }}</q-item-label>
-                                        </div>
-                                      </template>
-                                    </div>
-                                    <template v-if='groupData.price === 0'>
-                                      <div class='m--flex--1-1 relative-position'>
-                                        <div class='absolute-right flex row no-wrap items-end'>
-                                          <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 2.4vw'>无料</q-item-label>
-                                        </div>
-                                      </div>
-                                    </template>
-                                    <template v-if='groupData.price > 0'>
-                                      <div class='m--flex--1-1 relative-position'>
-                                        <div class='absolute-right flex row no-wrap'>
-                                          <div class='m--flex--0-0 flex row no-wrap items-end'>
-                                            <q-item-label class='m--font--impact' style='font-size: 1.8vw; transform: translate(0, 0.2vw)'>{{ groupData.currency }}</q-item-label>
-                                          </div>
-                                          <div class='m--flex--0-0 flex row no-wrap items-end' style='margin-left: 0.3vw'>
-                                            <q-item-label class='m--font--impact' style='font-size: 3.6vw; transform: translate(0, 0.55vw)'>{{ groupData.price.toString().split('.')[0] }}.</q-item-label>
-                                            <div>
-                                              <q-item-label class='m--font--impact' style='font-size: 1.9vw; transform: translate(0, 0.4vw)'>{{ groupData.price.toString().split('.')[1] ? (groupData.price.toString().split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
-                                              <q-item-label class='text-bold' style='font-size: 1.3vw; margin: 0 0 0 0.2vw; transform: translate(0, 0.15vw)'>/{{ groupData.unit }}</q-item-label>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </template>
-                                  </div>
-                                  <template v-if='groupData.description'>
-                                    <div class='flex row no-wrap' style='margin-top: 0.6vw'>
-                                      <div class='m--font--source-han-sans-sc --medium' style='font-size: 1vw; margin-left: 1vw'>
-                                        <q-item-label>{{ groupData.description }}</q-item-label>
-                                      </div>
-                                    </div>
-                                  </template>
-                                  <template v-if='menuInputData.showInfoFirst'>
-                                    <div class='flex row no-wrap' style='margin-top: 0.6vw'>
-                                      <div class='m--flex--0-0' :style='`width: 0.3vw; background-color: ${ electronMenuExcel.config.themeColor9 }`'></div>
-                                      <div class='full-height m--flex--1-1' style='max-width: calc(100% - 0.3vw)'>
-                                        <div class='bg-grey-3' style='padding: 0.6vw 0.8vw 0.8vw 0.8vw'>
-                                          <div class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>
-                                            <template v-if='groupData.size'>
-                                              <div class='row no-wrap' style='margin-top: 0.2vw'>
-                                                <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>规格</q-item-label>
-                                                <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupData.size }}</q-item-label>
-                                              </div>
-                                            </template>
-                                            <template v-if='groupData.material'>
-                                              <div class='row no-wrap' style='margin-top: 0.2vw'>
-                                                <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>材质</q-item-label>
-                                                <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupData.material }}</q-item-label>
-                                              </div>
-                                            </template>
-                                            <template v-if='groupData.manufacture'>
-                                              <div class='row no-wrap' style='margin-top: 0.2vw'>
-                                                <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>工艺</q-item-label>
-                                                <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupData.manufacture }}</q-item-label>
-                                              </div>
-                                            </template>
-                                            <template v-if='groupData.producer'>
-                                              <div class='row no-wrap' style='margin-top: 0.2vw'>
-                                                <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>制造设计</q-item-label>
-                                                <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupData.producer }}</q-item-label>
-                                              </div>
-                                            </template>
-                                            <template v-if='groupData.author'>
-                                              <div class='row no-wrap' style='margin-top: 0.2vw'>
-                                                <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>画师</q-item-label>
-                                                <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupData.author }}</q-item-label>
-                                              </div>
-                                            </template>
-                                            <template v-if='groupData.timestamp'>
-                                              <div class='row no-wrap' style='margin-top: 0.2vw'>
-                                                <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>定稿日期</q-item-label>
-                                                <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupData.timestamp }}</q-item-label>
-                                              </div>
-                                            </template>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </template>
-                                  <template v-if='menuInputData.showHintGroup'>
-                                    <template v-if='groupData.titleBefore'>
-                                      <div style='margin-top: 0.6vw'>
-                                        <div class='m--electron-menu--scroll-area--grid-item--warning-card'>
-                                          <div class='--title flex row flex-center'>
-                                            <q-icon size='1.2vw' name='mdi-alert-circle-outline' style='transform: translate(0, 0.05vw)'></q-icon>
-                                            <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: 1.1vw; margin-left: 0.2vw'>{{ groupData.titleBefore }}</q-item-label>
-                                          </div>
-                                          <div class='--content'>
-                                            <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>{{ groupData.textBefore }}</q-item-label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </template>
-                                  </template>
+                                  <ElectronicMenuTitlePart :config='electronMenuExcel.config' :name='groupData.name' :category='groupData.category' :price='groupData.price' :unit='groupData.unit' :currency='groupData.currency'></ElectronicMenuTitlePart>
+                                  <ElectronicMenuDescriptionPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :description='groupData.description'></ElectronicMenuDescriptionPart>
+                                  <ElectronicMenuInfoPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='menuInputData.showInfoGroup' :size='groupData.size' :material='groupData.material' :manufacture='groupData.manufacture' :producer='groupData.producer' :author='groupData.author' :timestamp='groupData.timestamp'></ElectronicMenuInfoPart>
+                                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='menuInputData.showHintGroup' :title='groupData.titleAfter' :text='groupData.textAfter'></ElectronicMenuHintPart>
                                 </div>
                                 <div>
                                   <div v-masonry transition-duration='0.3s' item-selector='.m--electron-menu--scroll-area--grid-item--group' column-width='.--column-width'>
                                     <template v-for='(data, index) in electronMenuExcel.data' :key='index'>
-                                      <template v-if='data.group === groupData.name'>
-                                        <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :imageRecord='imageRecord' :showInfo='menuInputData.showInfoInner' :showHint='menuInputData.showHintData' :width='`${ 100 / groupData.width }%`' class='m--electron-menu--scroll-area--grid-item--group --column-width' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
+                                      <template v-if='data.group === groupData.id'>
+                                        <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :showInfo='groupData.displayInfo' :showHint='groupData.displayHint' :width='`${ 100 / groupData.width * data.width }%`' :class='`m--electron-menu--scroll-area--grid-item--group` + (data.width === 1 ? ` --column-width` : ``)' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
                                       </template>
                                     </template>
                                   </div>
                                 </div>
-                                <div style='padding: 0.5vw'>
-                                  <template v-if='menuInputData.howInfo'>
-                                    <template v-if='groupData.titleAfter'>
-                                      <div>
-                                        <div class='m--electron-menu--scroll-area--grid-item--warning-card'>
-                                          <div class='--title flex row flex-center'>
-                                            <q-icon size='1.2vw' name='mdi-alert-circle-outline' style='transform: translate(0, 0.05vw)'></q-icon>
-                                            <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: 1.1vw; margin-left: 0.2vw'>{{ groupData.titleAfter }}</q-item-label>
-                                          </div>
-                                          <div class='--content'>
-                                            <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>{{ groupData.textAfter }}</q-item-label>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </template>
+                                <div style='padding: 0.5vw 0.5vw 0 0.5vw'>
+                                  <ElectronicMenuHintPart :config='electronMenuExcel.config' :show='menuInputData.showHintGroup' :title='groupData.titleAfter' :text='groupData.textAfter'></ElectronicMenuHintPart>
+                                  <template v-if='menuInputData.showHintGroup && groupData.titleAfter && groupData.textAfter'>
+                                    <div style='padding: 0.5vw 0'></div>
                                   </template>
-                                  <div>
+                                  <div style='padding: 0 0 0.5vw 0'>
                                     <q-separator class='bg-primary' style='height: 0.2vw'></q-separator>
                                   </div>
                                 </div>
@@ -369,7 +257,7 @@
                           </template>
                           <template v-for='(data, index) in electronMenuExcel.data' :key='index'>
                             <template v-if='!data.group || data.group === `default`'>
-                              <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :imageRecord='imageRecord' :showInfo='menuInputData.showInfoFirst' :showHint='menuInputData.showHintData' width='25%' class='m--electron-menu--scroll-area--grid-item --column-width' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
+                              <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :showInfo='menuInputData.showInfoData' :showHint='menuInputData.showHintData' :width='`${ 25 * data.width }%`' :class='`m--electron-menu--scroll-area--grid-item` + (data.width === 1 ? ` --column-width` : ``)' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
                             </template>
                           </template>
                         </div>
@@ -383,111 +271,24 @@
         </div>
       </div>
     </div>
-    <q-dialog class='m--electron-menu--dialog' v-model='dialogShow' @close='closeDialog'>
+    <q-dialog class='m--electron-menu--dialog' v-model='dialogShow' @close='closeDialog' position='top'>
       <q-card style='width: 80vw'>
         <div class='fit text-black text-left'>
           <div style='padding: 2vw'>
-            <div class='flex row no-wrap'>
-              <div>
-                <div class='flex row no-wrap items-end'>
-                  <div :style='`width: 0.5vw; height: 1.2vw; margin-bottom: 0.2vw; background-color: ${ electronMenuExcel.config.themeColor9 }`'></div>
-                  <template v-if='groupSelect'>
-                    <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 1.6vw; margin-left: 0.4vw'>{{ groupSelect.name }}</q-item-label>
-                  </template>
-                  <template v-if='dataSelect'>
-                    <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 1.6vw; margin-left: 0.4vw'>{{ dataSelect.name }}</q-item-label>
-                  </template>
-                </div>
-                <template v-if='groupSelect'>
-                  <template v-if='groupSelect.category'>
-                    <div style='margin-top: 0.4vw'>
-                      <q-item-label class='m--font--source-han-sans-sc --bold text-no-wrap' style='font-size: 1.2vw; margin-left: 1vw'>{{ groupSelect.category }}</q-item-label>
-                    </div>
-                  </template>
-                </template>
-                <template v-if='dataSelect'>
-                  <template v-if='dataSelect.category'>
-                    <div style='margin-top: 0.4vw'>
-                      <q-item-label class='m--font--source-han-sans-sc --bold text-no-wrap' style='font-size: 1.2vw; margin-left: 1vw'>{{ dataSelect.category }}</q-item-label>
-                    </div>
-                  </template>
-                </template>
-              </div>
-              <template v-if='groupSelect'>
-                <template v-if='groupSelect.price === 0'>
-                  <div class='m--flex--1-1 relative-position'>
-                    <div class='absolute-right flex row no-wrap items-end'>
-                      <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 2.4vw'>无料</q-item-label>
-                    </div>
-                  </div>
-                </template>
-                <template v-if='groupSelect.price > 0'>
-                  <div class='m--flex--1-1 relative-position'>
-                    <div class='absolute-right flex row no-wrap'>
-                      <div class='m--flex--0-0 flex row no-wrap items-end'>
-                        <q-item-label class='m--font--impact' style='font-size: 1.8vw; transform: translate(0, 0.2vw)'>{{ groupSelect.currency }}</q-item-label>
-                      </div>
-                      <div class='m--flex--0-0 flex row no-wrap items-end' style='margin-left: 0.3vw'>
-                        <q-item-label class='m--font--impact' style='font-size: 3.6vw; transform: translate(0, 0.55vw)'>{{ groupSelect.price.toString().split('.')[0] }}.</q-item-label>
-                        <div>
-                          <q-item-label class='m--font--impact' style='font-size: 1.9vw; transform: translate(0, 0.4vw)'>{{ groupSelect.price.toString().split('.')[1] ? (groupSelect.price.toString().split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
-                          <q-item-label class='text-bold' style='font-size: 1.3vw; margin: 0 0 0 0.2vw; transform: translate(0, 0.15vw)'>/{{ groupSelect.unit }}</q-item-label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </template>
-              <template v-if='dataSelect'>
-                <template v-if='dataSelect.price === 0'>
-                  <div class='m--flex--1-1 relative-position'>
-                    <div class='absolute-right flex row no-wrap items-end'>
-                      <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 2.4vw'>无料</q-item-label>
-                    </div>
-                  </div>
-                </template>
-                <template v-if='dataSelect.price > 0'>
-                  <div class='m--flex--1-1 relative-position'>
-                    <div class='absolute-right flex row no-wrap'>
-                      <div class='m--flex--0-0 flex row no-wrap items-end'>
-                        <q-item-label class='m--font--impact' style='font-size: 1.8vw; transform: translate(0, 0.2vw)'>{{ dataSelect.currency }}</q-item-label>
-                      </div>
-                      <div class='m--flex--0-0 flex row no-wrap items-end' style='margin-left: 0.3vw'>
-                        <q-item-label class='m--font--impact' style='font-size: 3.6vw; transform: translate(0, 0.55vw)'>{{ dataSelect.price.toString().split('.')[0] }}.</q-item-label>
-                        <div>
-                          <q-item-label class='m--font--impact' style='font-size: 1.9vw; transform: translate(0, 0.4vw)'>{{ dataSelect.price.toString().split('.')[1] ? (dataSelect.price.toString().split('.')[1] + '00').substring(0, 2) : '00' }}</q-item-label>
-                          <q-item-label class='text-bold' style='font-size: 1.3vw; margin: 0 0 0 0.2vw; transform: translate(0, 0.15vw)'>/{{ dataSelect.unit }}</q-item-label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </template>
-            </div>
             <template v-if='groupSelect'>
-              <template v-if='groupSelect.description'>
-                <div class='flex row no-wrap' style='margin-top: 0.6vw'>
-                  <div class='m--font--source-han-sans-sc --medium' style='font-size: 1vw; margin-left: 1vw'>
-                    <q-item-label>{{ groupSelect.description }}</q-item-label>
-                  </div>
-                </div>
-              </template>
+              <ElectronicMenuTitlePart :config='electronMenuExcel.config' :name='groupSelect.name' :category='groupSelect.category' :price='groupSelect.price' :unit='groupSelect.unit' :currency='groupSelect.currency'></ElectronicMenuTitlePart>
+              <ElectronicMenuDescriptionPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :description='groupSelect.description'></ElectronicMenuDescriptionPart>
             </template>
             <template v-if='dataSelect'>
-              <template v-if='dataSelect.description'>
-                <div class='flex row no-wrap' style='margin-top: 0.6vw'>
-                  <div class='m--font--source-han-sans-sc --medium' style='font-size: 1vw; margin-left: 1vw'>
-                    <q-item-label>{{ dataSelect.description }}</q-item-label>
-                  </div>
-                </div>
-              </template>
+              <ElectronicMenuTitlePart :config='electronMenuExcel.config' :name='dataSelect.name' :category='dataSelect.category' :price='dataSelect.price' :unit='dataSelect.unit' :currency='dataSelect.currency'></ElectronicMenuTitlePart>
+              <ElectronicMenuDescriptionPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :description='dataSelect.description'></ElectronicMenuDescriptionPart>
             </template>
             <div class='flex row no-wrap' style='margin-top: 0.6vw'>
               <template v-if='dataSelect'>
-                <template v-if='dataSelect.id in imageRecord'>
-                  <div class='m--flex--0-0' style='width: calc(50% - 1vw)'>
+                <template v-if='dataSelect.imageSrc'>
+                  <div class='m--flex--0-0' style='width: calc(50% - 0.5vw)'>
                     <div>
-                      <q-img :src='imageRecord[dataSelect.id]'></q-img>
+                      <q-img :src='dataSelect.imageSrc'></q-img>
                     </div>
                   </div>
                   <div class='m--flex--1-1'>
@@ -495,160 +296,16 @@
                   </div>
                 </template>
               </template>
-              <div class='m--flex--0-0' :style='dataSelect && dataSelect.id in imageRecord ? `width: calc(50% - 1vw)` : `width: 100%`'>
+              <div class='m--flex--0-0' :style='dataSelect && dataSelect.imageSrc ? `width: calc(50% - 0.5vw)` : `width: 100%`'>
                 <template v-if='groupSelect'>
-                  <div class='flex row no-wrap'>
-                    <div class='m--flex--0-0' :style='`width: 0.3vw; background-color: ${ electronMenuExcel.config.themeColor9 }`'></div>
-                    <div class='full-height m--flex--1-1' style='max-width: calc(100% - 0.3vw)'>
-                      <div class='bg-grey-3' style='padding: 0.6vw 0.8vw 0.8vw 0.8vw'>
-                        <div class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>
-                          <template v-if='groupSelect.size'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>规格</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupSelect.size }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='groupSelect.material'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>材质</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupSelect.material }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='groupSelect.manufacture'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>工艺</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupSelect.manufacture }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='groupSelect.producer'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>制造设计</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupSelect.producer }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='groupSelect.author'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>画师</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupSelect.author }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='groupSelect.timestamp'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>定稿日期</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ groupSelect.timestamp }}</q-item-label>
-                            </div>
-                          </template>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <ElectronicMenuInfoPart :config='electronMenuExcel.config' :show='true' :size='groupSelect.size' :material='groupSelect.material' :manufacture='groupSelect.manufacture' :producer='groupSelect.producer' :author='groupSelect.author' :timestamp='groupSelect.timestamp'></ElectronicMenuInfoPart>
+                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='groupSelect.titleBefore' :text='groupSelect.textBefore'></ElectronicMenuHintPart>
+                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='groupSelect.titleAfter' :text='groupSelect.textAfter'></ElectronicMenuHintPart>
                 </template>
                 <template v-if='dataSelect'>
-                  <div class='flex row no-wrap'>
-                    <div class='m--flex--0-0' :style='`width: 0.3vw; background-color: ${ electronMenuExcel.config.themeColor9 }`'></div>
-                    <div class='full-height m--flex--1-1' style='max-width: calc(100% - 0.3vw)'>
-                      <div class='bg-grey-3' style='padding: 0.6vw 0.8vw 0.8vw 0.8vw'>
-                        <div class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>
-                          <template v-if='dataSelect.size'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>规格</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ dataSelect.size }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='dataSelect.material'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>材质</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ dataSelect.material }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='dataSelect.manufacture'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>工艺</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ dataSelect.manufacture }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='dataSelect.producer'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>制造设计</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ dataSelect.producer }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='dataSelect.author'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>画师</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ dataSelect.author }}</q-item-label>
-                            </div>
-                          </template>
-                          <template v-if='dataSelect.timestamp'>
-                            <div class='row no-wrap' style='margin-top: 0.2vw'>
-                              <q-item-label class='text-no-wrap m--electron-menu--scroll-area--grid-item--justify-info'>定稿日期</q-item-label>
-                              <q-item-label class='text-no-wrap ellipsis' style='margin: 0'>：{{ dataSelect.timestamp }}</q-item-label>
-                            </div>
-                          </template>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template v-if='groupSelect'>
-                  <template v-if='groupSelect.titleBefore'>
-                    <div style='margin-top: 0.6vw'>
-                      <div class='m--electron-menu--scroll-area--grid-item--warning-card'>
-                        <div class='--title flex row flex-center'>
-                          <q-icon size='1.2vw' name='mdi-alert-circle-outline' style='transform: translate(0, 0.05vw)'></q-icon>
-                          <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: 1.1vw; margin-left: 0.2vw'>{{ groupSelect.titleBefore }}</q-item-label>
-                        </div>
-                        <div class='--content'>
-                          <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>{{ groupSelect.textBefore }}</q-item-label>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                </template>
-                <template v-if='dataSelect'>
-                  <template v-if='dataSelect.titleBefore'>
-                    <div style='margin-top: 0.6vw'>
-                      <div class='m--electron-menu--scroll-area--grid-item--warning-card'>
-                        <div class='--title flex row flex-center'>
-                          <q-icon size='1.2vw' name='mdi-alert-circle-outline' style='transform: translate(0, 0.05vw)'></q-icon>
-                          <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: 1.1vw; margin-left: 0.2vw'>{{ dataSelect.titleBefore }}</q-item-label>
-                        </div>
-                        <div class='--content'>
-                          <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>{{ dataSelect.textBefore }}</q-item-label>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                </template>
-                <template v-if='groupSelect'>
-                  <template v-if='groupSelect.titleAfter'>
-                    <div style='margin-top: 0.6vw'>
-                      <div class='m--electron-menu--scroll-area--grid-item--warning-card'>
-                        <div class='--title flex row flex-center'>
-                          <q-icon size='1.2vw' name='mdi-alert-circle-outline' style='transform: translate(0, 0.05vw)'></q-icon>
-                          <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: 1.1vw; margin-left: 0.2vw'>{{ groupSelect.titleAfter }}</q-item-label>
-                        </div>
-                        <div class='--content'>
-                          <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>{{ groupSelect.textAfter }}</q-item-label>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                </template>
-                <template v-if='dataSelect'>
-                  <template v-if='dataSelect.titleAfter'>
-                    <div style='margin-top: 0.6vw'>
-                      <div class='m--electron-menu--scroll-area--grid-item--warning-card'>
-                        <div class='--title flex row flex-center'>
-                          <q-icon size='1.2vw' name='mdi-alert-circle-outline' style='transform: translate(0, 0.05vw)'></q-icon>
-                          <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: 1.1vw; margin-left: 0.2vw'>{{ dataSelect.titleAfter }}</q-item-label>
-                        </div>
-                        <div class='--content'>
-                          <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>{{ dataSelect.textAfter }}</q-item-label>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
+                  <ElectronicMenuInfoPart :config='electronMenuExcel.config' :show='true' :size='dataSelect.size' :material='dataSelect.material' :manufacture='dataSelect.manufacture' :producer='dataSelect.producer' :author='dataSelect.author' :timestamp='dataSelect.timestamp'></ElectronicMenuInfoPart>
+                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='dataSelect.titleBefore' :text='dataSelect.textBefore'></ElectronicMenuHintPart>
+                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='dataSelect.titleAfter' :text='dataSelect.textAfter'></ElectronicMenuHintPart>
                 </template>
               </div>
             </div>

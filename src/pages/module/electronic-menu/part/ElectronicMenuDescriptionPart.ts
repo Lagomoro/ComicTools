@@ -3,27 +3,14 @@
 // --------------------------------------------------------------------------------
 import { defineComponent, PropType } from 'vue';
 // --------------------------------------------------------------------------------
-import { Data, Config } from 'src/scripts/module/electron-menu/interface/common';
-// --------------------------------------------------------------------------------
-import ElectronicMenuTitlePart from 'pages/module/electronic-menu/part/ElectronicMenuTitlePart.vue';
-import ElectronicMenuDescriptionPart from 'pages/module/electronic-menu/part/ElectronicMenuDescriptionPart.vue';
-import ElectronicMenuInfoPart from 'pages/module/electronic-menu/part/ElectronicMenuInfoPart.vue';
-import ElectronicMenuHintPart from 'pages/module/electronic-menu/part/ElectronicMenuHintPart.vue';
+import { Config } from 'src/scripts/module/electron-menu/interface/common';
 // ================================================================================
 
 export default defineComponent({
-  components: {
-    ElectronicMenuTitlePart,
-    ElectronicMenuDescriptionPart,
-    ElectronicMenuInfoPart,
-    ElectronicMenuHintPart,
-  },
   props: {
+    rootStyle:   { type: String,                     required: false },
     config:      { type: Object as PropType<Config>, required: true },
-    data:        { type: Object as PropType<Data>,   required: true },
-    showInfo:    { type: Boolean,                    required: true },
-    showHint:    { type: Boolean,                    required: true },
-    width:       { type: String,                     required: true },
+    description: { type: String,                     required: true },
   },
   setup() {
     // ------------------------------------------------------------------------------

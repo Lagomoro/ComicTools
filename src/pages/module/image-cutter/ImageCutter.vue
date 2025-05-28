@@ -143,7 +143,7 @@
                     <div class='row q-px-md'>
                       <template v-for='index in 9' :key='index'>
                         <div class='m--border--solid--sm' style='padding: 2px'>
-                          <div class='m--border--solid--sm' :style='`padding: 11.56px;background-color: ` + longImageExcel.config[`themeColor` + index]'></div>
+                          <div class='m--border--solid--sm' :style='`padding: 11.56px;background-color: ` + longImageExcel.config[`themeColor${ index }`]'></div>
                         </div>
                       </template>
                     </div>
@@ -151,7 +151,7 @@
                     <div class='q-px-md'>
                       <template v-for='index in 4' :key='index'>
                         <div class='m--border--solid--sm q-pa-xs'>
-                          <q-item-label :style='`font-family: ` + longImageExcel.config[`themeFont` + index]'>{{ longImageExcel.config[`themeFont` + index] }}</q-item-label>
+                          <q-item-label :style='`font-family: ` + longImageExcel.config[`themeFont${ index }`]'>{{ longImageExcel.config[`themeFont${ index }`] }}</q-item-label>
                         </div>
                       </template>
                     </div>
