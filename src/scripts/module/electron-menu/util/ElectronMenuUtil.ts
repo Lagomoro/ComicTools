@@ -91,6 +91,7 @@ export class ElectronMenuUtil {
     group.name        = groupLine.name as string ?? group.name;
     group.category    = groupLine.category as string ?? group.category;
     group.width       = groupLine.width as number ?? group.width;
+    group.displayDesc = groupLine.displayDesc as boolean ?? group.displayDesc;
     group.displayInfo = groupLine.displayInfo as boolean ?? group.displayInfo;
     group.displayHint = groupLine.displayHint as boolean ?? group.displayHint;
     group.price       = groupLine.price as number ?? group.price;

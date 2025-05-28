@@ -331,7 +331,7 @@
                           <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: calc(1.1vw * var(--scale)); margin-left:calc(0.2vw * var(--scale))'>库存不足</q-item-label>
                         </div>
                         <div class='--content'>
-                          <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale))'>制品库存不足，请联系摊主补货。<br><br>兔萌社是无盈利社团，为了给到大家较低的成本价，制品的起订数量通常都在 200 以上，这样厂家才能让利给大家。<br><br>为达成起订数量，缺货制品需要和同类制品一起拼团，请耐心等待。</q-item-label>
+                          <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale)); white-space: pre-line'>{{ electronMenuExcel.config.noStorageText }}</q-item-label>
                         </div>
                       </div>
                     </div>

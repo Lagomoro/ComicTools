@@ -79,10 +79,11 @@ export const CONFIG_SLOT_HEADER_RECORD: Record<ConfigSlotHeaderKey, ConfigSlotHe
   value:       { width: 20, name: '字段值' },
 };
 
-export type ConfigSlotKey = 'themeColor1' | 'themeColor2' | 'themeColor3' | 'themeColor4' | 'themeColor5' | 'themeColor6' | 'themeColor7' | 'themeColor8' | 'themeColor9' | 'themeFont1' | 'themeFont2' | 'themeFont3'  | 'themeFont4' | 'watermarkImage';
+export type ConfigSlotKey = 'themeColor1' | 'themeColor2' | 'themeColor3' | 'themeColor4' | 'themeColor5' | 'themeColor6' | 'themeColor7' | 'themeColor8' | 'themeColor9' | 'themeFont1' | 'themeFont2' | 'themeFont3'  | 'themeFont4' | 'noStorageText' | 'watermarkImage';
 export type ConfigValue = number | string | boolean | ArrayBuffer | null;
 
 export interface ConfigSlot {
+  key: ConfigSlotKey;
   type: 'number' | 'string' | 'boolean' | 'color' | 'font' | 'image';
   name: string;
   description: string;
@@ -91,20 +92,21 @@ export interface ConfigSlot {
 }
 
 export const CONFIG_SLOT_RECORD: Record<ConfigSlotKey, ConfigSlot> = {
-  themeColor1:    { type: 'color',  name: '主题颜色 1', description: '通常用于背景',                 defaultValue: 'rgba(255, 255, 255, 1)', sampleValue: 'FFFFFFFF' },
-  themeColor2:    { type: 'color',  name: '主题颜色 2', description: '通常用于图片背景',              defaultValue: 'rgba(255, 255, 255, 1)', sampleValue: 'FFFFFFFF' },
-  themeColor3:    { type: 'color',  name: '主题颜色 3', description: '通常用于标题文字',              defaultValue: 'rgba(0, 0, 0, 1)',       sampleValue: 'FF000000' },
-  themeColor4:    { type: 'color',  name: '主题颜色 4', description: '通常用于描述文字',              defaultValue: 'rgba(0, 0, 0, 1)',       sampleValue: 'FF000000' },
-  themeColor5:    { type: 'color',  name: '主题颜色 5', description: '通常用于信息文字',              defaultValue: 'rgba(0, 0, 0, 1)',       sampleValue: 'FF000000' },
-  themeColor6:    { type: 'color',  name: '主题颜色 6', description: '通常用于前/后置标题文字',        defaultValue: 'rgba(255, 255, 255, 1)', sampleValue: 'FFFFFFFF' },
-  themeColor7:    { type: 'color',  name: '主题颜色 7', description: '通常用于前/后置框',             defaultValue: 'rgba(0, 0, 0, 1)',       sampleValue: 'FF000000' },
-  themeColor8:    { type: 'color',  name: '主题颜色 8', description: '通常用于前/后置内容文字',        defaultValue: 'rgba(0, 0, 0, 1)',       sampleValue: 'FF000000' },
-  themeColor9:    { type: 'color',  name: '主题颜色 9', description: '保留字段',                    defaultValue: 'rgba(29, 105, 180, 1)',  sampleValue: 'FF1D69B4' },
-  themeFont1:     { type: 'font',   name: '主题字体 1', description: '通常用于标题文字',              defaultValue: '微软雅黑',                sampleValue: '微软雅黑' },
-  themeFont2:     { type: 'font',   name: '主题字体 2', description: '通常用于描述文字，可读性要强',    defaultValue: '微软雅黑',                sampleValue: '微软雅黑' },
-  themeFont3:     { type: 'font',   name: '主题字体 3', description: '通常用于信息文字，可读性要强',    defaultValue: '微软雅黑',                sampleValue: '微软雅黑' },
-  themeFont4:     { type: 'font',   name: '主题字体 4', description: '通常用于前/后置文字，可读性要强', defaultValue: '微软雅黑',                sampleValue: '微软雅黑' },
-  watermarkImage: { type: 'image',  name: '水印图片',   description: '水印的透明底图',               defaultValue: null,                     sampleValue: 'null' },
+  themeColor1:    { key: 'themeColor1',    type: 'color',  name: '主题颜色 1', description: '通常用于背景',                 defaultValue: 'rgba(255, 255, 255, 1)',    sampleValue: 'FFFFFFFF' },
+  themeColor2:    { key: 'themeColor2',    type: 'color',  name: '主题颜色 2', description: '通常用于图片背景',              defaultValue: 'rgba(255, 255, 255, 1)',    sampleValue: 'FFFFFFFF' },
+  themeColor3:    { key: 'themeColor3',    type: 'color',  name: '主题颜色 3', description: '通常用于标题文字',              defaultValue: 'rgba(0, 0, 0, 1)',          sampleValue: 'FF000000' },
+  themeColor4:    { key: 'themeColor4',    type: 'color',  name: '主题颜色 4', description: '通常用于描述文字',              defaultValue: 'rgba(0, 0, 0, 1)',          sampleValue: 'FF000000' },
+  themeColor5:    { key: 'themeColor5',    type: 'color',  name: '主题颜色 5', description: '通常用于信息文字',              defaultValue: 'rgba(0, 0, 0, 1)',          sampleValue: 'FF000000' },
+  themeColor6:    { key: 'themeColor6',    type: 'color',  name: '主题颜色 6', description: '通常用于前/后置标题文字',        defaultValue: 'rgba(255, 255, 255, 1)',    sampleValue: 'FFFFFFFF' },
+  themeColor7:    { key: 'themeColor7',    type: 'color',  name: '主题颜色 7', description: '通常用于前/后置框',             defaultValue: 'rgba(0, 0, 0, 1)',          sampleValue: 'FF000000' },
+  themeColor8:    { key: 'themeColor8',    type: 'color',  name: '主题颜色 8', description: '通常用于前/后置内容文字',        defaultValue: 'rgba(0, 0, 0, 1)',          sampleValue: 'FF000000' },
+  themeColor9:    { key: 'themeColor9',    type: 'color',  name: '主题颜色 9', description: '保留字段',                    defaultValue: 'rgba(29, 105, 180, 1)',     sampleValue: 'FF1D69B4' },
+  themeFont1:     { key: 'themeFont1',     type: 'font',   name: '主题字体 1', description: '通常用于标题文字',              defaultValue: '微软雅黑',                   sampleValue: '微软雅黑' },
+  themeFont2:     { key: 'themeFont2',     type: 'font',   name: '主题字体 2', description: '通常用于描述文字，可读性要强',    defaultValue: '微软雅黑',                   sampleValue: '微软雅黑' },
+  themeFont3:     { key: 'themeFont3',     type: 'font',   name: '主题字体 3', description: '通常用于信息文字，可读性要强',    defaultValue: '微软雅黑',                   sampleValue: '微软雅黑' },
+  themeFont4:     { key: 'themeFont4',     type: 'font',   name: '主题字体 4', description: '通常用于前/后置文字，可读性要强', defaultValue: '微软雅黑',                   sampleValue: '微软雅黑' },
+  noStorageText:  { key: 'noStorageText',  type: 'string', name: '无货文字',   description: '无货时的文字',                 defaultValue: '制品库存不足，请联系摊主补货。', sampleValue: '制品库存不足，请联系摊主补货。' },
+  watermarkImage: { key: 'watermarkImage', type: 'image',  name: '水印图片',   description: '水印的透明底图',               defaultValue: null,                       sampleValue: 'null' },
 };
 
 export interface Config extends Record<ConfigSlotKey, ConfigValue> {

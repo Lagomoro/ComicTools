@@ -173,6 +173,7 @@ export class ImageCutterUtil {
     config.themeFont2     = configLine.themeFont2 as string ?? config.themeFont2;
     config.themeFont3     = configLine.themeFont3 as string ?? config.themeFont3;
     config.themeFont4     = configLine.themeFont4 as string ?? config.themeFont4;
+    config.noStorageText  = configLine.noStorageText as string ?? config.noStorageText;
     config.watermarkImage = configLine.watermarkImage as ArrayBuffer ?? config.watermarkImage;
 
     config.watermarkImageSrc = config.watermarkImage ? HtmlUtil.arrayBufferToImageSrc(config.watermarkImage) : '';
