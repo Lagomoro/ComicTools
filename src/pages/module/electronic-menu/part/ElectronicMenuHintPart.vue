@@ -8,7 +8,7 @@
             <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: calc(1.1vw * var(--scale)); margin-left: calc(0.2vw * var(--scale))'>{{ title }}</q-item-label>
           </div>
           <div class='--content'>
-            <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale))'>{{ text }}</q-item-label>
+            <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale)); white-space: pre-line'>{{ text }}</q-item-label>
           </div>
         </div>
       </div>

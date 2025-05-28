@@ -2,8 +2,8 @@
   <template v-if='show'>
     <template v-if='description'>
       <div class='flex row no-wrap' :style='`--scale: ${ scale }; ${ rootStyle }`'>
-        <div class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale)); margin-left: calc(1vw * var(--scale))'>
-          <q-item-label>{{ description }}</q-item-label>
+        <div class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale)); margin: 0 calc(1vw * var(--scale))'>
+          <q-item-label style='white-space: pre-line'>{{ description }}</q-item-label>
         </div>
       </div>
     </template>
