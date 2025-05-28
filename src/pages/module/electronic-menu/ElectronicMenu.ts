@@ -54,6 +54,8 @@ export default defineComponent({
       paddingVertical: number;
       paddingHorizontal: number;
 
+      showDescGroup: boolean;
+      showDescData: boolean;
       showInfoGroup: boolean;
       showInfoData: boolean;
       showHintGroup: boolean;
@@ -67,6 +69,8 @@ export default defineComponent({
     // * Option
     // ------------------------------------------------------------------------------
     const screenList = ref<Screen[]>(SCREEN_LIST);
+    // ------------------------------------------------------------------------------
+    const dialogScale = ref<number>(1.5);
     // ------------------------------------------------------------------------------
     // * Component
     // ------------------------------------------------------------------------------
@@ -89,6 +93,8 @@ export default defineComponent({
       paddingVertical: 0,
       paddingHorizontal: 0,
 
+      showDescGroup: true,
+      showDescData: true,
       showInfoGroup: true,
       showInfoData: true,
       showHintGroup: false,
@@ -132,7 +138,7 @@ export default defineComponent({
         const sellOutImage = await HtmlUtil.imageSrcToImage(sellOut);
         for(const data of electronMenuExcel.value.data){
           if(data.image) {
-            if(data.storage === 0){
+            if(data.storage <= 0){
               data.imageSrc = await ElectronMenuUtil.getSelloutImageSrc(data.image as ArrayBuffer, sellOutImage);
             }
           }
@@ -209,6 +215,8 @@ export default defineComponent({
       // * Option
       // ------------------------------------------------------------------------------
       screenList,
+      // ------------------------------------------------------------------------------
+      dialogScale,
       // ------------------------------------------------------------------------------
       // * Component
       // ------------------------------------------------------------------------------

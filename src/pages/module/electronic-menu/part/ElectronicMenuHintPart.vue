@@ -1,14 +1,14 @@
 <template>
   <template v-if='show'>
     <template v-if='title && text'>
-      <div :style='rootStyle'>
+      <div :style='`--scale: ${ scale }; ${ rootStyle }`'>
         <div class='m--electron-menu--scroll-area--part--hint--card'>
           <div class='--title flex row flex-center'>
-            <q-icon size='1.2vw' name='mdi-alert-circle-outline' style='transform: translate(0, 0.05vw)'></q-icon>
-            <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: 1.1vw; margin-left: 0.2vw'>{{ title }}</q-item-label>
+            <q-icon size='calc(1.2vw * var(--scale))' name='mdi-alert-circle-outline' style='transform: translate(0, calc(0.05vw * var(--scale)))'></q-icon>
+            <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: calc(1.1vw * var(--scale)); margin-left: calc(0.2vw * var(--scale))'>{{ title }}</q-item-label>
           </div>
           <div class='--content'>
-            <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: 1vw'>{{ text }}</q-item-label>
+            <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale))'>{{ text }}</q-item-label>
           </div>
         </div>
       </div>

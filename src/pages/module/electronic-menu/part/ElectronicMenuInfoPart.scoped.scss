@@ -1,6 +1,6 @@
 .m--electron-menu--scroll-area--part--info--text-justify {
-  width: 4vw;
-  min-width: 4vw;
+  width: calc(4vw * var(--scale));
+  min-width: calc(4vw * var(--scale));
   text-align: justify;
   text-align-last: justify;
 }

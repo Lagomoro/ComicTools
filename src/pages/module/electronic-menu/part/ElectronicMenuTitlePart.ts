@@ -8,12 +8,14 @@ import { Config } from 'src/scripts/module/electron-menu/interface/common';
 
 export default defineComponent({
   props: {
-    config:   { type: Object as PropType<Config>, required: true },
-    name:     { type: String,                     required: true },
-    category: { type: String,                     required: false },
-    price:    { type: Number,                     required: true },
-    unit:     { type: String,                     required: true },
-    currency: { type: String,                     required: true },
+    rootStyle: { type: String,                     required: false },
+    scale:     { type: Number,                     default: 1 },
+    config:    { type: Object as PropType<Config>, required: true },
+    name:      { type: String,                     required: true },
+    category:  { type: String,                     required: false },
+    price:     { type: Number,                     required: true },
+    unit:      { type: String,                     required: true },
+    currency:  { type: String,                     required: true },
   },
   setup(props) {
     // ------------------------------------------------------------------------------

@@ -19,3 +19,22 @@
     background: linear-gradient(rgba(255, 255, 255, 0), white);
   }
 }
+
+.m--electron-menu--scroll-area--storage--card {
+  border: calc(0.1vw * var(--scale)) solid var(--q-negative);
+  border-radius: calc(0.6vw * var(--scale));
+
+  & > .--title {
+    border-radius: calc(0.5vw * var(--scale)) calc(0.5vw * var(--scale)) 0 0;
+
+    padding: calc(0.2vw * var(--scale)) calc(0.3vw * var(--scale)) calc(0.4vw * var(--scale)) calc(0.3vw * var(--scale));
+
+    color: white;
+    background-color: var(--q-negative);
+  }
+  & > .--content {
+    padding: calc(0.6vw * var(--scale));
+
+    color: var(--q-negative);
+  }
+}

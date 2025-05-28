@@ -1,10 +1,12 @@
 <template>
-  <template v-if='description'>
-    <div class='flex row no-wrap' :style='rootStyle'>
-      <div class='m--font--source-han-sans-sc --medium' style='font-size: 1vw; margin-left: 1vw'>
-        <q-item-label>{{ description }}</q-item-label>
+  <template v-if='show'>
+    <template v-if='description'>
+      <div class='flex row no-wrap' :style='`--scale: ${ scale }; ${ rootStyle }`'>
+        <div class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale)); margin-left: calc(1vw * var(--scale))'>
+          <q-item-label>{{ description }}</q-item-label>
+        </div>
       </div>
-    </div>
+    </template>
   </template>
 </template>
 

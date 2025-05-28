@@ -21,6 +21,7 @@ export default defineComponent({
   props: {
     config:      { type: Object as PropType<Config>, required: true },
     data:        { type: Object as PropType<Data>,   required: true },
+    showDesc:    { type: Boolean,                    required: true },
     showInfo:    { type: Boolean,                    required: true },
     showHint:    { type: Boolean,                    required: true },
     width:       { type: String,                     required: true },

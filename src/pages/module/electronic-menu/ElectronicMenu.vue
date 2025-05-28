@@ -85,7 +85,20 @@
               <div class='q-gutter-y-sm' style='width: 300px'>
                 <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
                   <div class='m--flex--1-1 flex flex-center'>
-                    <q-item-label>显示详细信息</q-item-label>
+                    <q-item-label>显示描述</q-item-label>
+                  </div>
+                  <q-separator vertical></q-separator>
+                  <div class='m--flex--1-1 flex flex-center'>
+                    <q-checkbox dense label='分组' v-model='menuInputData.showDescGroup'></q-checkbox>
+                  </div>
+                  <q-separator vertical></q-separator>
+                  <div class='m--flex--1-1 flex flex-center'>
+                    <q-checkbox dense label='单品' v-model='menuInputData.showDescData'></q-checkbox>
+                  </div>
+                </div>
+                <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
+                  <div class='m--flex--1-1 flex flex-center'>
+                    <q-item-label>显示详情</q-item-label>
                   </div>
                   <q-separator vertical></q-separator>
                   <div class='m--flex--1-1 flex flex-center'>
@@ -98,7 +111,7 @@
                 </div>
                 <div class='m--border--solid--sm m--border--radius--q-btn row' style='height: 36px'>
                   <div class='m--flex--1-1 flex flex-center'>
-                    <q-item-label>显示提示信息</q-item-label>
+                    <q-item-label>显示提示</q-item-label>
                   </div>
                   <q-separator vertical></q-separator>
                   <div class='m--flex--1-1 flex flex-center'>
@@ -230,7 +243,7 @@
                               <div class='fit text-black text-left'>
                                 <div style='padding: 0.5vw'>
                                   <ElectronicMenuTitlePart :config='electronMenuExcel.config' :name='groupData.name' :category='groupData.category' :price='groupData.price' :unit='groupData.unit' :currency='groupData.currency'></ElectronicMenuTitlePart>
-                                  <ElectronicMenuDescriptionPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :description='groupData.description'></ElectronicMenuDescriptionPart>
+                                  <ElectronicMenuDescriptionPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='menuInputData.showDescGroup' :description='groupData.description'></ElectronicMenuDescriptionPart>
                                   <ElectronicMenuInfoPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='menuInputData.showInfoGroup' :size='groupData.size' :material='groupData.material' :manufacture='groupData.manufacture' :producer='groupData.producer' :author='groupData.author' :timestamp='groupData.timestamp'></ElectronicMenuInfoPart>
                                   <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='menuInputData.showHintGroup' :title='groupData.titleAfter' :text='groupData.textAfter'></ElectronicMenuHintPart>
                                 </div>
@@ -238,7 +251,7 @@
                                   <div v-masonry transition-duration='0.3s' item-selector='.m--electron-menu--scroll-area--grid-item--group' column-width='.--column-width'>
                                     <template v-for='(data, index) in electronMenuExcel.data' :key='index'>
                                       <template v-if='data.group === groupData.id'>
-                                        <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :showInfo='groupData.displayInfo' :showHint='groupData.displayHint' :width='`${ 100 / groupData.width * data.width }%`' :class='`m--electron-menu--scroll-area--grid-item--group` + (data.width === 1 ? ` --column-width` : ``)' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
+                                        <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :showDesc='groupData.displayDesc' :showInfo='groupData.displayInfo' :showHint='groupData.displayHint' :width='`${ 100 / groupData.width * data.width }%`' :class='`m--electron-menu--scroll-area--grid-item--group` + (data.width === 1 ? ` --column-width` : ``)' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
                                       </template>
                                     </template>
                                   </div>
@@ -257,7 +270,7 @@
                           </template>
                           <template v-for='(data, index) in electronMenuExcel.data' :key='index'>
                             <template v-if='!data.group || data.group === `default`'>
-                              <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :showInfo='menuInputData.showInfoData' :showHint='menuInputData.showHintData' :width='`${ 25 * data.width }%`' :class='`m--electron-menu--scroll-area--grid-item` + (data.width === 1 ? ` --column-width` : ``)' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
+                              <ElectronicMenuGridItem :config='electronMenuExcel.config' :data='data' :showDesc='menuInputData.showDescData' :showInfo='menuInputData.showInfoData' :showHint='menuInputData.showHintData' :width='`${ 25 * data.width }%`' :class='`m--electron-menu--scroll-area--grid-item` + (data.width === 1 ? ` --column-width` : ``)' @click.prevent.stop='setDataDialog(data)'></ElectronicMenuGridItem>
                             </template>
                           </template>
                         </div>
@@ -273,17 +286,20 @@
     </div>
     <q-dialog class='m--electron-menu--dialog' v-model='dialogShow' @close='closeDialog' position='top'>
       <q-card style='width: 80vw'>
-        <div class='fit text-black text-left'>
-          <div style='padding: 2vw'>
+        <div class='fit text-black text-left' :style='`--scale: ${ dialogScale }`'>
+          <div style='padding: 3vw'>
+            <q-separator class='bg-primary' style='height: 0.5vw'></q-separator>
+            <div class='full-width m--flex--0-0' style='margin-bottom: 1vw'>
+              <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 1.5vw'>{{ menuInputData.logoEnglish }}</q-item-label>
+              <q-item-label class='m--font--ys-hello-font-bang-bang-ti text-no-wrap' style='font-size: 3.5vw; transform: translate(-0.2vw, -0.5vw); margin: 0'>{{ menuInputData.logoChinese }}</q-item-label>
+            </div>
             <template v-if='groupSelect'>
-              <ElectronicMenuTitlePart :config='electronMenuExcel.config' :name='groupSelect.name' :category='groupSelect.category' :price='groupSelect.price' :unit='groupSelect.unit' :currency='groupSelect.currency'></ElectronicMenuTitlePart>
-              <ElectronicMenuDescriptionPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :description='groupSelect.description'></ElectronicMenuDescriptionPart>
+              <ElectronicMenuTitlePart :scale='dialogScale' :config='electronMenuExcel.config' :name='groupSelect.name' :category='groupSelect.category' :price='groupSelect.price' :unit='groupSelect.unit' :currency='groupSelect.currency'></ElectronicMenuTitlePart>
             </template>
             <template v-if='dataSelect'>
-              <ElectronicMenuTitlePart :config='electronMenuExcel.config' :name='dataSelect.name' :category='dataSelect.category' :price='dataSelect.price' :unit='dataSelect.unit' :currency='dataSelect.currency'></ElectronicMenuTitlePart>
-              <ElectronicMenuDescriptionPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :description='dataSelect.description'></ElectronicMenuDescriptionPart>
+              <ElectronicMenuTitlePart :scale='dialogScale' :config='electronMenuExcel.config' :name='dataSelect.name' :category='dataSelect.category' :price='dataSelect.price' :unit='dataSelect.unit' :currency='dataSelect.currency'></ElectronicMenuTitlePart>
             </template>
-            <div class='flex row no-wrap' style='margin-top: 0.6vw'>
+            <div class='flex row no-wrap' style='margin-top: calc(0.6vw * var(--scale))'>
               <template v-if='dataSelect'>
                 <template v-if='dataSelect.imageSrc'>
                   <div class='m--flex--0-0' style='width: calc(50% - 0.5vw)'>
@@ -298,14 +314,29 @@
               </template>
               <div class='m--flex--0-0' :style='dataSelect && dataSelect.imageSrc ? `width: calc(50% - 0.5vw)` : `width: 100%`'>
                 <template v-if='groupSelect'>
-                  <ElectronicMenuInfoPart :config='electronMenuExcel.config' :show='true' :size='groupSelect.size' :material='groupSelect.material' :manufacture='groupSelect.manufacture' :producer='groupSelect.producer' :author='groupSelect.author' :timestamp='groupSelect.timestamp'></ElectronicMenuInfoPart>
-                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='groupSelect.titleBefore' :text='groupSelect.textBefore'></ElectronicMenuHintPart>
-                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='groupSelect.titleAfter' :text='groupSelect.textAfter'></ElectronicMenuHintPart>
+                  <ElectronicMenuInfoPart :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :size='groupSelect.size' :material='groupSelect.material' :manufacture='groupSelect.manufacture' :producer='groupSelect.producer' :author='groupSelect.author' :timestamp='groupSelect.timestamp'></ElectronicMenuInfoPart>
+                  <ElectronicMenuDescriptionPart rootStyle='margin-top: calc(0.6vw * var(--scale))' :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :description='groupSelect.description'></ElectronicMenuDescriptionPart>
+                  <ElectronicMenuHintPart rootStyle='margin-top: calc(0.6vw * var(--scale))' :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :title='groupSelect.titleBefore' :text='groupSelect.textBefore'></ElectronicMenuHintPart>
+                  <ElectronicMenuHintPart rootStyle='margin-top: calc(0.6vw * var(--scale))' :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :title='groupSelect.titleAfter' :text='groupSelect.textAfter'></ElectronicMenuHintPart>
                 </template>
                 <template v-if='dataSelect'>
-                  <ElectronicMenuInfoPart :config='electronMenuExcel.config' :show='true' :size='dataSelect.size' :material='dataSelect.material' :manufacture='dataSelect.manufacture' :producer='dataSelect.producer' :author='dataSelect.author' :timestamp='dataSelect.timestamp'></ElectronicMenuInfoPart>
-                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='dataSelect.titleBefore' :text='dataSelect.textBefore'></ElectronicMenuHintPart>
-                  <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='electronMenuExcel.config' :show='true' :title='dataSelect.titleAfter' :text='dataSelect.textAfter'></ElectronicMenuHintPart>
+                  <ElectronicMenuInfoPart :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :size='dataSelect.size' :material='dataSelect.material' :manufacture='dataSelect.manufacture' :producer='dataSelect.producer' :author='dataSelect.author' :timestamp='dataSelect.timestamp'></ElectronicMenuInfoPart>
+                  <ElectronicMenuDescriptionPart rootStyle='margin-top: calc(0.6vw * var(--scale))' :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :description='dataSelect.description'></ElectronicMenuDescriptionPart>
+                  <ElectronicMenuHintPart rootStyle='margin-top: calc(0.6vw * var(--scale))' :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :title='dataSelect.titleBefore' :text='dataSelect.textBefore'></ElectronicMenuHintPart>
+                  <template v-if='dataSelect.storage <= 0'>
+                    <div style='margin-top: calc(0.6vw * var(--scale))'>
+                      <div class='m--electron-menu--scroll-area--storage--card'>
+                        <div class='--title flex row flex-center'>
+                          <q-icon size='calc(1.2vw * var(--scale))' name='mdi-alert-circle-outline' style='transform: translate(0, calc(0.05vw * var(--scale)))'></q-icon>
+                          <q-item-label class='m--font--source-han-sans-sc --medium text-center' style='font-size: calc(1.1vw * var(--scale)); margin-left:calc(0.2vw * var(--scale))'>库存不足</q-item-label>
+                        </div>
+                        <div class='--content'>
+                          <q-item-label class='m--font--source-han-sans-sc --medium' style='font-size: calc(1vw * var(--scale))'>制品库存不足，请联系摊主补货。<br><br>兔萌社是无盈利社团，为了给到大家较低的成本价，制品的起订数量通常都在 200 以上，这样厂家才能让利给大家。<br><br>为达成起订数量，缺货制品需要和同类制品一起拼团，请耐心等待。</q-item-label>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <ElectronicMenuHintPart rootStyle='margin-top: calc(0.6vw * var(--scale))' :scale='dialogScale' :config='electronMenuExcel.config' :show='true' :title='dataSelect.titleAfter' :text='dataSelect.textAfter'></ElectronicMenuHintPart>
                 </template>
               </div>
             </div>

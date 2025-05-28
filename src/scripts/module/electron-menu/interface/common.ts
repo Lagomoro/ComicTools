@@ -41,7 +41,7 @@ export const CONFIG_SLOT_RECORD: Record<ConfigSlotKey, ConfigSlot> = ImageDataCo
 export type Config = ImageDataCommon.Config;
 export type ConfigLine = ImageDataCommon.ConfigLine;
 // --------------------------------------------------------------------------------
-export type GroupHeaderKey = 'id' | 'name' | 'category' | 'width' | 'displayInfo' | 'displayHint' | 'price' | 'unit' | 'currency' | 'description' | 'size' | 'material' | 'manufacture' | 'producer' | 'author' | 'timestamp' | 'titleBefore' | 'textBefore' | 'titleAfter' | 'textAfter';
+export type GroupHeaderKey = 'id' | 'name' | 'category' | 'width' | 'displayDesc' | 'displayInfo' | 'displayHint' | 'price' | 'unit' | 'currency' | 'description' | 'size' | 'material' | 'manufacture' | 'producer' | 'author' | 'timestamp' | 'titleBefore' | 'textBefore' | 'titleAfter' | 'textAfter';
 export type GroupValue = number | string | boolean | null;
 
 export interface GroupHeader {
@@ -58,9 +58,10 @@ export const GROUP_HEADER_RECORD: Record<GroupHeaderKey, GroupHeader> = {
   id:          ImageDataCommon.DATA_HEADER_RECORD.id as GroupHeader,
   name:        ImageDataCommon.DATA_HEADER_RECORD.name as GroupHeader,
   category:    ImageDataCommon.DATA_HEADER_RECORD.category as GroupHeader,
-  width:       { optional: false, width: 10, type: 'number',  name: '宽度',    description: '分组宽度',                                          defaultValue: 1,         sampleValue: 2 },
-  displayInfo: { optional: false, width: 15, type: 'boolean', name: '显示信息', description: '分组内是否显示信息',                                  defaultValue: false,     sampleValue: false },
-  displayHint: { optional: false, width: 15, type: 'boolean', name: '显示提示', description: '分组内是否显示提示',                                  defaultValue: false,     sampleValue: false },
+  width:       { optional: false, width: 10, type: 'number',  name: '宽度',    description: '分组宽度',         defaultValue: 2,     sampleValue: 2 },
+  displayDesc: { optional: false, width: 15, type: 'boolean', name: '显示描述', description: '分组内是否显示描述', defaultValue: false, sampleValue: false },
+  displayInfo: { optional: false, width: 15, type: 'boolean', name: '显示详情', description: '分组内是否显示详情', defaultValue: false, sampleValue: false },
+  displayHint: { optional: false, width: 15, type: 'boolean', name: '显示提示', description: '分组内是否显示提示', defaultValue: false, sampleValue: false },
   price:       ImageDataCommon.DATA_HEADER_RECORD.price as GroupHeader,
   unit:        ImageDataCommon.DATA_HEADER_RECORD.unit as GroupHeader,
   currency:    ImageDataCommon.DATA_HEADER_RECORD.currency as GroupHeader,
@@ -82,6 +83,7 @@ export interface Group extends Record<GroupHeaderKey, GroupValue> {
   name: string;
   category: string;
   width: number;
+  displayDesc: boolean;
   displayInfo: boolean;
   displayHint: boolean;
   price: number;

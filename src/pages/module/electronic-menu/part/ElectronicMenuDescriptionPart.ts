@@ -9,7 +9,9 @@ import { Config } from 'src/scripts/module/electron-menu/interface/common';
 export default defineComponent({
   props: {
     rootStyle:   { type: String,                     required: false },
+    scale:       { type: Number,                     default: 1 },
     config:      { type: Object as PropType<Config>, required: true },
+    show:        { type: Boolean,                    required: true },
     description: { type: String,                     required: true },
   },
   setup() {
