@@ -19,5 +19,3 @@
 <script lang='ts' src='./ElectronicMenuHintPart.ts'/>
 <style lang='scss' src='./ElectronicMenuHintPart.scss'/>
 <style scoped lang='scss' src='./ElectronicMenuHintPart.scoped.scss'/>
-<script setup lang="ts">
-</script>

@@ -1,7 +1,8 @@
 // ================================================================================
 // * Module dependencies
 // --------------------------------------------------------------------------------
-import { defineComponent, ref } from 'vue';
+import { defineComponent, nextTick, ref } from 'vue';
+import { QDialog } from 'quasar';
 import HtmlUtil from 'src/scripts/util/HtmlUtil';
 import ExcelUtil from 'src/scripts/util/ExcelUtil';
 import {
@@ -75,6 +76,7 @@ export default defineComponent({
     // * Component
     // ------------------------------------------------------------------------------
     const elementDivElectronMenu = ref<HTMLDivElement>(undefined as unknown as HTMLDivElement);
+    const dialogElectronMenu = ref<QDialog>(undefined as unknown as QDialog);
     // ------------------------------------------------------------------------------
     // * Parameter
     // ------------------------------------------------------------------------------
@@ -195,10 +197,12 @@ export default defineComponent({
       dataSelect.value = data;
     }
 
-    function closeDialog() {
-      dialogShow.value = false;
-      groupSelect.value = undefined as unknown as Group;
-      dataSelect.value = undefined as unknown as Data;
+    async function showDialog() {
+      await nextTick();
+      const portal = dialogElectronMenu.value.contentEl.parentElement?.parentElement as HTMLDivElement;
+      if(portal) {
+        elementDivElectronMenu.value.appendChild(portal);
+      }
     }
     // ------------------------------------------------------------------------------
     //# endregion
@@ -221,6 +225,7 @@ export default defineComponent({
       // * Component
       // ------------------------------------------------------------------------------
       elementDivElectronMenu,
+      dialogElectronMenu,
       // ------------------------------------------------------------------------------
       // * Parameter
       // ------------------------------------------------------------------------------
@@ -253,7 +258,7 @@ export default defineComponent({
       // ------------------------------------------------------------------------------
       setGroupDialog,
       setDataDialog,
-      closeDialog,
+      showDialog,
     }
   }
 });

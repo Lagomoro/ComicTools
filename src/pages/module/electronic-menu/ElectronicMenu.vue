@@ -284,7 +284,7 @@
         </div>
       </div>
     </div>
-    <q-dialog class='m--electron-menu--dialog' v-model='dialogShow' @close='closeDialog' position='top'>
+    <q-dialog class='m--electron-menu--dialog' v-model='dialogShow' @before-show='showDialog' position='top' ref='dialogElectronMenu'>
       <q-card style='width: 80vw'>
         <div class='fit text-black text-left' :style='`--scale: ${ dialogScale }`'>
           <div style='padding: 3vw'>
