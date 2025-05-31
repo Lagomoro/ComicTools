@@ -196,6 +196,9 @@ export class ImageCutterUtil {
     data.watermark   = dataLine.watermark as boolean ?? data.watermark;
     data.category    = dataLine.category as string ?? data.category;
     data.width       = dataLine.width as number ?? data.width;
+    data.displayDesc = dataLine.displayDesc as boolean ?? data.displayDesc;
+    data.displayInfo = dataLine.displayInfo as boolean ?? data.displayInfo;
+    data.displayHint = dataLine.displayHint as boolean ?? data.displayHint;
     data.group       = dataLine.group as string ?? data.group;
     data.price       = dataLine.price as number ?? data.price;
     data.unit        = dataLine.unit as string ?? data.unit;

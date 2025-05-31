@@ -129,7 +129,7 @@ export interface Config extends Record<ConfigSlotKey, ConfigValue> {
 }
 export type ConfigLine = Partial<Record<ConfigSlotKey, ConfigValue>>;
 // --------------------------------------------------------------------------------
-export type DataHeaderKey = 'id' | 'name' | 'image' | 'watermark' | 'category' | 'width' | 'group' | 'price' | 'unit' | 'currency' | 'description' | 'size' | 'material' | 'manufacture' | 'producer' | 'author' | 'timestamp' | 'storage' | 'titleBefore' | 'textBefore' | 'titleAfter' | 'textAfter';
+export type DataHeaderKey = 'id' | 'name' | 'image' | 'watermark' | 'category' | 'width' | 'displayDesc' | 'displayInfo' | 'displayHint' | 'group' | 'price' | 'unit' | 'currency' | 'description' | 'size' | 'material' | 'manufacture' | 'producer' | 'author' | 'timestamp' | 'storage' | 'titleBefore' | 'textBefore' | 'titleAfter' | 'textAfter';
 export type DataValue = number | string | boolean | ArrayBuffer | null;
 
 export interface DataHeader {
@@ -149,6 +149,9 @@ export const DATA_HEADER_RECORD: Record<DataHeaderKey, DataHeader> = {
   watermark:   { optional: false, width: 15, type: 'boolean', name: '水印',    description: '是否添加水印',                                       defaultValue: false,     sampleValue: false },
   category:    { optional: false, width: 15, type: 'string',  name: '分类',    description: '制品分类',                                          defaultValue: '',        sampleValue: '亚克力色纸' },
   width:       { optional: false, width: 10, type: 'number',  name: '宽度',    description: '分组宽度',                                          defaultValue: 1,         sampleValue: 1 },
+  displayDesc: { optional: false, width: 15, type: 'boolean', name: '显示描述', description: '是否显示描述',                                       defaultValue: true,      sampleValue: true },
+  displayInfo: { optional: false, width: 15, type: 'boolean', name: '显示详情', description: '是否显示详情',                                       defaultValue: true,      sampleValue: true },
+  displayHint: { optional: false, width: 15, type: 'boolean', name: '显示提示', description: '是否显示提示',                                       defaultValue: true,      sampleValue: true },
   group:       { optional: true,  width: 10, type: 'string',  name: '分组',    description: '展示分组',                                          defaultValue: 'default', sampleValue: 'default' },
   price:       { optional: true,  width: 10, type: 'number',  name: '价格',    description: '制品有料交换价格，< 0 不显示，0 显示为无料',             defaultValue: -1,        sampleValue: 0 },
   unit:        { optional: true,  width: 10, type: 'string',  name: '制品单位', description: '制品的单位',                                        defaultValue: '个',      sampleValue: '个' },
@@ -174,6 +177,9 @@ export interface Data extends Record<DataHeaderKey, DataValue> {
   watermark: boolean;
   category: string;
   width: number;
+  displayDesc: boolean;
+  displayInfo: boolean;
+  displayHint: boolean;
   group: string;
   price: number;
   unit: string;
