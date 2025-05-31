@@ -11,7 +11,7 @@
             <q-img :src='data.imageSrc'></q-img>
           </div>
         </template>
-        <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='config' :show='showHint' :title='data.titleAfter' :text='data.textAfter'></ElectronicMenuHintPart>
+        <ElectronicMenuHintPart rootStyle='margin-top: 0.6vw' :config='config' :show='showHint && data.displayHint' :title='data.titleAfter' :text='data.textAfter'></ElectronicMenuHintPart>
       </div>
     </div>
   </q-btn>
